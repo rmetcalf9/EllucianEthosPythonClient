@@ -1,2 +1,9 @@
-# EllucainEthosPythonClient
-Python Client Library for interfacing with Ellucian Ethos
+# mq_client_abstraction
+Abstracted MQ Client Library
+
+
+
+## Destinations
+
+Destinations must start with
+"/queue/"
