@@ -53,8 +53,6 @@ class APIClientBase():
     if injectHeadersFn is not None:
       injectHeadersFn(headers)
 
-    print("headers", headers)
-
     result = reqFn(
       url=self.baseURL + url,
       data=data,
@@ -62,6 +60,8 @@ class APIClientBase():
     )
     if result.status_code == 401:
       if refreshAttempted:
+        self.raiseResponseException(result)
+      if loginSession is None:
         self.raiseResponseException(result)
 
       if loginSession.refresh(): #Returns true if loginSession refresh succeeded

@@ -14,8 +14,10 @@ ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBase
 
 loginSession = ethosClient.getLoginSessionFromAPIKey(apiKey=ethosAPIKey)
 
-ethosClient.getResource(
+person = ethosClient.getResource(
   loginSession=loginSession,
   resourceName="persons",
   resourceID="ddd"
 )
+
+print("Person Retrieved=", person)
