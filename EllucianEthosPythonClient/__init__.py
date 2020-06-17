@@ -1,4 +1,4 @@
-# EllucainEthosPythonClient
+# EllucianEthosPythonClient
 
 
 from ._version import get_versions
