@@ -12,7 +12,7 @@ sp_tests_require = [
 
 all_require = sp_install_requires + sp_tests_require
 
-setup(name='EllucainEthosPythonClient',
+setup(name='EllucianEthosPythonClient',
       version=versioneer.get_version(),
       cmdclass=versioneer.get_cmdclass(),
       description='Python package which provides Ellucian Ethos Client',
