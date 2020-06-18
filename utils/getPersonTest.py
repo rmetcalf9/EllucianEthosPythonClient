@@ -1,3 +1,5 @@
+# Simple utility to use API to retrieve a person
+
 import os
 import sys
 import Common
@@ -5,6 +7,8 @@ import Common
 sys.path.insert(0, os.path.abspath('../'))
 import EllucianEthosPythonClient
 
+# If the __version__ contains dirty it means we are using the library from the code
+#  rather than a pip installed version
 print("Using EllucianEthosPythonClient version", EllucianEthosPythonClient.__version__)
 
 ethosBaseURL = Common.GetFromEnvironment("ETHOSBASEURL")
@@ -21,6 +25,6 @@ person = ethosClient.getResource(
   resourceName="persons",
   resourceID=personResourceID
 )
-print(person.dict)
 
-print("Person Retrieved=", person)
+print("Person Type Object=", type(person).__name__)
+print("Person Retrieved=", person.dict["names"][0]["fullName"])

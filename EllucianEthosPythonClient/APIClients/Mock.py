@@ -145,6 +145,7 @@ class MockClass():
     #error_type,
     status_code,
     contentBytes,
+    contentHeaders=None,
     ignoreData=False
   ):
     the_response = Response()
@@ -156,6 +157,8 @@ class MockClass():
       the_response._content = b""
     else:
       the_response._content = base64.b64decode(contentBytes)
+    if contentHeaders != None:
+      the_response.headers=contentHeaders
     self.stackOfExpectedReturnValues.append(
       ExpectedResult(
         reqFnName=reqFnName,

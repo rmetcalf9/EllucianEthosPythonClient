@@ -1,4 +1,5 @@
 import EllucianEthosPythonClient
+import unittest
 
 from nose.plugins.attrib import attr
 def wipd(f):
@@ -6,7 +7,7 @@ def wipd(f):
 
 ethosBaseURL="MOCK"
 
-class testClassWithHelpers():
+class testClassWithHelpers(unittest.TestCase):
   ethosClient = None
 
   def setUp(self):

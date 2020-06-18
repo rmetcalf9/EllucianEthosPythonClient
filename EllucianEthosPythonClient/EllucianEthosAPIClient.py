@@ -8,10 +8,10 @@ def getVersionIntFromHeader(meaidTypeHeaderValue):
   requiredStart = "application/vnd.hedtech.integration.v"
   requiredEnd = "+json"
   if not meaidTypeHeaderValue.startswith(requiredStart):
-    raise Exception("Could not determine resourse version")
+    raise Exception("Could not determine resource version")
   meaidTypeHeaderValue = meaidTypeHeaderValue[len(requiredStart):]
   if not meaidTypeHeaderValue.endswith(requiredEnd):
-    raise Exception("Could not determine resourse version - header didn't end with " + requiredEnd)
+    raise Exception("Could not determine resource version - header didn't end with " + requiredEnd)
   meaidTypeHeaderValue = meaidTypeHeaderValue[:-len(requiredEnd)]
   return int(meaidTypeHeaderValue)
 
