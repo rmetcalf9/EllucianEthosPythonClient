@@ -7,10 +7,11 @@ class helpers(TestHelperSuperClass.testClassWithHelpers):
 
 @TestHelperSuperClass.wipd
 class test_MainClient(helpers):
-  def test_basicCreation(self):
-    ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=TestHelperSuperClass.ethosBaseURL)
+  def test_basicGetPerson(self):
+    loginSession = None
 
-    ethosClient.sendGetRequest(
-      loginSession = None,
-      url = "DD"
+    person = self.ethosClient.getResource(
+      loginSession=loginSession,
+      resourceName="persons",
+      resourceID="ddd"
     )

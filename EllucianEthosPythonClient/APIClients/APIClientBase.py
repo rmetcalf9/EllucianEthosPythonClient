@@ -40,6 +40,14 @@ class APIClientBase():
       raise APIClientNotFoundException(result)
     raise APIClientException(result)
 
+  def testRegisterNextResponse(self, *args, **kwargs):
+    return self.mock.registerNextResponse(*args, **kwargs)
+  def testComplete(self):
+    return self.mock.testComplete()
+  def testGetMockObj(self):
+    return self.mock
+
+
   def sendRequest(self, reqFn, url, loginSession, data, origin, injectHeadersFn, refreshAttempted=False):
     if self.baseURL == "MOCK":
       return self.mock.returnNextResult(reqFnName=reqFn.__name__, url=url, data=data)

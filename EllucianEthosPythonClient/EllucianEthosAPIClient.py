@@ -1,5 +1,19 @@
 from .APIClients import APIClientBase
 from .EthosLoginSession import EthosLoginSessionBasedOnAPIKey
+from .ResourceWrappers import getResourceWrapper
+import json
+
+def getVersionIntFromHeader(meaidTypeHeaderValue):
+  #example: application/vnd.hedtech.integration.v6+json
+  requiredStart = "application/vnd.hedtech.integration.v"
+  requiredEnd = "+json"
+  if not meaidTypeHeaderValue.startswith(requiredStart):
+    raise Exception("Could not determine resourse version")
+  meaidTypeHeaderValue = meaidTypeHeaderValue[len(requiredStart):]
+  if not meaidTypeHeaderValue.endswith(requiredEnd):
+    raise Exception("Could not determine resourse version - header didn't end with " + requiredEnd)
+  meaidTypeHeaderValue = meaidTypeHeaderValue[:-len(requiredEnd)]
+  return int(meaidTypeHeaderValue)
 
 class EllucianEthosAPIClient(APIClientBase):
   refreshAuthTokenIfRequired = None
@@ -24,6 +38,7 @@ class EllucianEthosAPIClient(APIClientBase):
     if result.status_code != 200:
       self.raiseResponseException(result)
 
+    versionReturned = getVersionIntFromHeader(result.headers["x-hedtech-media-type"])
 
-    raise Exception("NI")
+    return getResourceWrapper(clientAPIInstance=self, dict=json.loads(result.content), version=versionReturned, resourseName=resourceName)
 
