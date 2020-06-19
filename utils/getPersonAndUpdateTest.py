@@ -23,10 +23,20 @@ person = ethosClient.getResource(
   loginSession=loginSession,
   resourceName="persons",
   resourceID=personResourceID,
-  version=12
+  version="12"
 )
 
 print("Person Type Object=", type(person).__name__)
-print("Person Retrieved=", person.dict["names"][0]["fullName"])
+print("Person Type ID=", person.resourceID)
+print("Person Retrieved lastName=", person.dict["names"][0]["lastName"])
+input("Press Enter to continue and update or ctrl+c to quit...")
 
-print("X", person.dict)
+#Known issue - See and error AddressLine is required
+# - it might be that person needs to load all the addresses as well in order to save any change sucessfully
+
+person.dict["names"][0]["lastName"] = person.dict["names"][0]["lastName"] + "x"
+print("Trying to change lastName to=", person.dict["names"][0]["lastName"])
+
+person.save(loginSession=loginSession)
+
+print("Name in obj after put sent=", person.dict["names"][0]["lastName"])

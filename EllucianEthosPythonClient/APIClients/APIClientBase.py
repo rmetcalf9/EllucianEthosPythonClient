@@ -93,5 +93,8 @@ class APIClientBase():
   def sendPostRequest(self, url, loginSession, data, origin=None, injectHeadersFn=None):
     return self.sendRequest(reqFn=requests.post, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn)
 
+  def sendPutRequest(self, url, loginSession, data, origin=None, injectHeadersFn=None):
+    return self.sendRequest(reqFn=requests.put, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn)
+
   def sendDeleteRequest(self, url, loginSession, data=None, origin=None, injectHeadersFn=None):
     return self.sendRequest(reqFn=requests.delete, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn)

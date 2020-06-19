@@ -16,7 +16,7 @@ print("Using EllucianEthosPythonClient version", EllucianEthosPythonClient.__ver
 ethosBaseURL = Common.GetFromEnvironment("ETHOSBASEURL")
 ethosAPIKey = Common.GetFromEnvironment("ICETHOSDEVAPIKEY")
 
-personResourceID = "01e5f1c3-d0f0-445c-a095-c2884cd6fe4b"
+personResourceID = "01e5f1c3-d0f0-445c-a095-c2884cd6fe4bX"
 
 ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
 
@@ -35,6 +35,7 @@ requestToTest = testRequests["getSinglePerson"]
 
 
 print("Response status_code was:" + str(result.status_code))
+print("Response headers were:" + str(result.headers))
 print("Response contentDict was:" + result.content.decode("utf-8"))
 
 

@@ -28,13 +28,15 @@ class EllucianEthosAPIClient(APIClientBase):
   def getResource(self, loginSession, resourceName, resourceID, version=None):
     def injectHeaderFN(headers):
       if version is not None:
-        headers["Accept"] = "application/vnd.hedtech.integration.v" + str(version) + "+json"
+        headers["Accept"] = "application/vnd.hedtech.integration.v" + version + "+json"
 
     result = self.sendGetRequest(
       url="/api/" + resourceName + "/" + resourceID,
       loginSession=loginSession,
       injectHeadersFn=injectHeaderFN
     )
+    if result.status_code == 404:
+      return None
     if result.status_code != 200:
       self.raiseResponseException(result)
 

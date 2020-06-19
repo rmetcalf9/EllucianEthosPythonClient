@@ -1,4 +1,5 @@
 from .BaseResourceWrapper import BaseResourceWrapper
+import copy
 
 def registerKnownResourses(resoursRegistryDict):
   resoursRegistryDict["persons"] = {
@@ -11,6 +12,14 @@ def registerKnownResourses(resoursRegistryDict):
 class Persons(BaseResourceWrapper):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
+
+  def _getDictForPut(self):
+    retVal = copy.deepcopy(self.dict)
+
+    #Updating addresses not yet supported
+    # sending them to API causes error
+    del retVal["addresses"]
+    return retVal
 
 class PersonsV6(Persons):
   def __init__(self, *args, **kwargs):
