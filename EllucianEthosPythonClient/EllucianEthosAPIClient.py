@@ -85,7 +85,7 @@ class EllucianEthosAPIClient(APIClientBase):
     result = self.sendDeleteRequest(
       url=url,
       loginSession=loginSession,
-      injectHeadersFn=None,
+      injectHeadersFn=None
     )
     if result.status_code != 200:
       self.raiseResponseException(result)

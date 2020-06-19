@@ -79,12 +79,11 @@ persons last name then calls the api to save it back to Ethos:
 print("Lastname is currently " + person.dict["names"][0]["lastName"])
 person.dict["names"][0]["lastName"] = person.dict["names"][0]["lastName"] + "2"
 person.save(loginSession=loginSession)
-)
 ```
 
 One thing to remember about this method is that the entire person record is saved back to Ethos. If an hour or two has
 elapsed between fetching the resource and saving it then there is a danger that any other changes to the source record
-will be overwritten. It's best to read a record then immediatadly write it back to minimise this.
+will be overwritten. It's best to read a record then immediatadly write it back to minimise this risk.
 
 ## Get a list of resources
 
@@ -111,7 +110,8 @@ for personHold in personHoldIterator:
 
 ## Create a new resource
 
-The following example creates a new person hold. This can be run in the REPL once the GUID's are filled in:
+The following example creates a new person hold. This can be run in the REPL once the GUID's for person and 
+person hold category are filled in:
 
 ```
 personGUID="TO BE ENTERED"
@@ -166,7 +166,53 @@ This library wraps a lot of API calls to make them easier to use in Python. Not 
 and they may not be wrapped in the way that is requried. The following example shows calling the API directly whilst
 still using the library to handle API security: 
 
-TODO
+```
+exampleURL = "/api/persons/SOMEPERSONGUID"
+exampleVersion = "6"
+
+def sampleInjectHeaderFunctionForGet(headers):
+  headers["Accept"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
+
+result = self.sendGetRequest(
+  url=exampleURL,
+  loginSession=loginSession,
+  injectHeadersFn=sampleInjectHeaderFunctionForGet
+)
+
+def sampleInjectHeaderFunctionForPost(headers):
+    headers["Accept"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
+    headers["Content-Type"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
+
+postDict = { "TODO": "PutDataHere" }
+
+result = self.sendPostRequest(
+    url=exampleURL,
+    loginSession=loginSession,
+    injectHeadersFn=sampleInjectHeaderFunctionForPost,
+    data=json.dumps(postDict)
+)
+
+def sampleInjectHeaderFunctionForPut(headers):
+  headers["Accept"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
+  headers["Content-Type"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
+
+putDict = { "TODO": "PutDataHere" }
+
+result = self.clientAPIInstance.sendPutRequest(
+  url=exampleURL,
+  loginSession=loginSession,
+  injectHeadersFn=sampleInjectHeaderFunctionForPut,
+  data=json.dumps(putDict)
+)
+
+
+result = ethosClient.sendDeleteRequest(
+    url=exampleURL,
+    loginSession=loginSession,
+    injectHeadersFn=None
+)
+
+```
 
 The return value of these functions is a standard python requests response object.
 
@@ -181,5 +227,11 @@ if result.status_code != 200:
 resultDict = json.loads(result.content)
 
 ```
+
+## Next Steps
+
+This quick start guide has stepped through most of the major features of the library.
+The library has also an implementation of a poller which can be used to call the publish API and retrieve change 
+notifications it is explained in more detail here - [Poller GUide](POLLERGUIDE.md).
 
 
