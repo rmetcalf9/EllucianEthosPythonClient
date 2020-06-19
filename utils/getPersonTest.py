@@ -17,13 +17,13 @@ ethosAPIKey = Common.GetFromEnvironment("ICETHOSDEVAPIKEY")
 personResourceID = "01e5f1c3-d0f0-445c-a095-c2884cd6fe4b"
 
 ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
-
 loginSession = ethosClient.getLoginSessionFromAPIKey(apiKey=ethosAPIKey)
 
 person = ethosClient.getResource(
   loginSession=loginSession,
   resourceName="persons",
-  resourceID=personResourceID
+  resourceID=personResourceID,
+  version=12
 )
 
 print("Person Type Object=", type(person).__name__)

@@ -2,9 +2,10 @@ from .BaseResourceWrapper import BaseResourceWrapper
 
 def registerKnownResourses(resoursRegistryDict):
   resoursRegistryDict["persons"] = {
-    6: PersonsV6,
-    8: PersonsV8,
-    12: PersonsV12
+    "6": PersonsV6,
+    "8": PersonsV8,
+    "12": PersonsV12,
+    "12.1.0": PersonsV12
   }
 
 class Persons(BaseResourceWrapper):

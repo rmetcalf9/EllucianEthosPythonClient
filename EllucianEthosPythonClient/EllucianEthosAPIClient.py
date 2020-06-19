@@ -13,7 +13,7 @@ def getVersionIntFromHeader(meaidTypeHeaderValue):
   if not meaidTypeHeaderValue.endswith(requiredEnd):
     raise Exception("Could not determine resource version - header didn't end with " + requiredEnd)
   meaidTypeHeaderValue = meaidTypeHeaderValue[:-len(requiredEnd)]
-  return int(meaidTypeHeaderValue)
+  return meaidTypeHeaderValue
 
 class EllucianEthosAPIClient(APIClientBase):
   refreshAuthTokenIfRequired = None

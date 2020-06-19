@@ -4,7 +4,7 @@ def getMimimumResourceMockResult(
   guid,
   version
 ):
-  responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + str(version) + "+json"}
+  responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + version + "+json"}
   response = {
     "id": guid,
   }
@@ -14,7 +14,7 @@ def getPersonMockResult(
   personGUID,
   version
 ):
-  responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + str(version) + "+json"}
+  responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + version + "+json"}
   response = {
     "addresses": [],
     "credentials": [],

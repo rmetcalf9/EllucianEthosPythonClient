@@ -13,6 +13,8 @@ class BaseResourceWrapper():
 
     if "id" not in dict:
       raise Exception("Invalid resource dict (missing id)")
+    if not isinstance(version , str):
+      raise Exception("Version passed must be a string")
 
     self.resourceID = dict["id"]
 
