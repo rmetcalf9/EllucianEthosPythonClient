@@ -28,3 +28,5 @@ person = ethosClient.getResource(
 
 print("Person Type Object=", type(person).__name__)
 print("Person Retrieved=", person.dict["names"][0]["fullName"])
+
+print("X", person.dict)

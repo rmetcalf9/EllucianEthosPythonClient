@@ -18,14 +18,15 @@ print(EllucianEthosPythonClient.__version__)
 ```
 This should output the version of the library that is installed. (If this dosen't work check you ran the pip install command)
 
-## Call an API to fetch a resource
+## Call an API to fetch a resource, change it and save the response
 
-this sample will create a login session for the Ethos hub and use it to retrieve a resource:
+This sample will create a login session for the Ethos hub and use it to retrieve a resource:
 
-Start a python3 console and run the following to setup the varaibles required. 
+Start a python3 REPL console and run the following to setup the varaibles required. 
 ```
 ethosBaseURL = "ETHOS BASE URL e.g. https://integrate.elluciancloud.ie no trailing slash"
 ethosAPIKey = "ETHOS APPLICATION API KEY"
+resourceName = "persons"
 resourceID = "A_PERSON_GuiD"
 ```
 (Replace the values above with values from your environment)
@@ -41,14 +42,53 @@ Now you can call the API to get a resource:
 ```
 person = ethosClient.getResource(
   loginSession=loginSession,
-  resourceName="persons",
+  resourceName=resourceName,
   resourceID=personResourceID,
-  version=6
+  version=None
 )
 ```
+The version paramater is optional and if you want to retrieve a specific option you can supply a string such as "12.1.0"
 
+The getResource function will return an Resource Wrapper Object. You can print the details of the object you returned as follows:
+
+```
+print(person.version)
+print(person.dict)
+```
+
+Most getResource calls will return a result class of BaseResourceWrapper however if the resource name and version is 
+recognised by the API the object returned will be a class designed for that object and version. This class may provide 
+spercific operations for that resource type. You can find the class that was returned with the following:
+
+```
+print("Resource Type Object=", type(person).__name__)
+```
+See [ResourceWrappers](../EllucianEthosPythonCLient/ResourceWrappers/README.md) for information.
+
+You can make a change to the resource by altering the dict structure. The following code adds a 2 to the end of the
+persons last name then calls the api to save it back to Ethos:
+```
+print("Lastname is currently " + person.dict["names"][0]["lastName"])
+person.dict["names"][0]["lastName"] = person.dict["names"][0]["lastName"] + "2"
+person.save()
+```
+
+One thing to remember about this method is that the entire person record is saved back to Ethos. If an hour or two has
+elapsed between fetching the resrouce and saving it then there is a danger that any other changes to the source record
+will be overwritten. It's best to read a record then immediatadly write it back to minimise this.
+
+## Delete a resource
 
 TODO
+
+## Query back resources
+
+TODO
+
+## Call any other API
+
+TODO
+
 
 
 
