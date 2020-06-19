@@ -2,12 +2,16 @@ from .BaseResourceWrapper import BaseResourceWrapper
 import copy
 
 def registerKnownResourses(resoursRegistryDict):
-  resoursRegistryDict["persons"] = {
-    "6": PersonsV6,
-    "8": PersonsV8,
-    "12": PersonsV12,
-    "12.1.0": PersonsV12
-  }
+  def getKnownResource(version):
+    majorVersion = version.split(".")[0]
+    if majorVersion=="6":
+      return PersonsV6
+    if majorVersion=="8":
+      return PersonsV8
+    if majorVersion=="12":
+      return PersonsV12
+    return None
+  resoursRegistryDict["persons"]=getKnownResource
 
 class Persons(BaseResourceWrapper):
   def __init__(self, *args, **kwargs):
