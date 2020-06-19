@@ -47,3 +47,45 @@ class EllucianEthosAPIClient(APIClientBase):
       raise Exception("Could not determine resource version - header didn't end with " + requiredEnd)
     meaidTypeHeaderValue = meaidTypeHeaderValue[:-len(requiredEnd)]
     return meaidTypeHeaderValue
+
+  def createResource(
+    self,
+    loginSession,
+    resourceName,
+    resourceDict,
+    version=None
+  ):
+    if version is None:
+      raise Exception("Must supply version when creating resource")
+    def injectHeaderFN(headers):
+        headers["Accept"] = "application/vnd.hedtech.integration.v" + version + "+json"
+        headers["Content-Type"] = "application/vnd.hedtech.integration.v" + version + "+json"
+
+    result = self.sendPostRequest(
+      url="/api/" + resourceName,
+      loginSession=loginSession,
+      injectHeadersFn=injectHeaderFN,
+      data=json.dumps(resourceDict)
+    )
+    if result.status_code != 201:
+      self.raiseResponseException(result)
+
+    versionReturned = self.getVersionIntFromHeader(result.headers["x-hedtech-media-type"])
+
+    return getResourceWrapper(clientAPIInstance=self, dict=json.loads(result.content), version=versionReturned, resourseName=resourceName)
+
+  def deleteResource(
+    self,
+    loginSession,
+    resourceName,
+    resourceID
+  ):
+    url = "/api/" + resourceName + "/" + resourceID
+
+    result = self.sendDeleteRequest(
+      url=url,
+      loginSession=loginSession,
+      injectHeadersFn=None,
+    )
+    if result.status_code != 200:
+      self.raiseResponseException(result)

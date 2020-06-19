@@ -48,7 +48,7 @@ class ResourceIterator:
       injectHeadersFn=injectHeaderFN
     )
     if result.status_code != 200:
-      self.raiseResponseException(result)
+      self.apiClient.raiseResponseException(result)
 
     if self.versionReturned is None:
       self.versionReturned = self.apiClient.getVersionIntFromHeader(result.headers["x-hedtech-media-type"])

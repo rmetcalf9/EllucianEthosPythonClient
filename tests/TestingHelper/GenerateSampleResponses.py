@@ -39,3 +39,22 @@ def getPersonNotFoundMockResult(
   response = {"errors":[{"code":"Global.SchemaValidation.Error","description":"Errors parsing input JSON.","message":"Person not found"}]}
   return response, responseHeaders, 404
 
+def getPersonHoldMockResult(
+    personholdGUID,
+    personGUID,
+    personHoldCategoryGUID,
+    version
+):
+  responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + version + "+json"}
+  response = {
+    "endOn":"2099-12-31T00:00:00Z",
+    "id": personholdGUID,
+    "person":{"id": personGUID},
+    "startOn":"2020-01-17T00:00:00Z",
+    "type":{
+      "category":"academic",
+      "detail":{"id": personHoldCategoryGUID}
+    }
+  }
+
+  return response, responseHeaders, 200

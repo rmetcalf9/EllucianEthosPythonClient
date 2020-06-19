@@ -44,3 +44,14 @@ class BaseResourceWrapper():
       self.clientAPIInstance.raiseResponseException(result)
 
     self.dict = json.loads(result.content)
+
+  def delete(self, loginSession):
+    url = "/api/" + self.resourceName + "/" + self.resourceID
+
+    result = self.clientAPIInstance.sendDeleteRequest(
+      url=url,
+      loginSession=loginSession,
+      injectHeadersFn=None,
+    )
+    if result.status_code != 200:
+      self.clientAPIInstance.raiseResponseException(result)

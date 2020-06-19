@@ -96,7 +96,8 @@ You can run this in the REPL:
 personHoldIterator = ethosClient.getResourceIterator(
   loginSession=loginSession,
   resourceName="person-holds",
-  version=None
+  version=None,
+  pageSize=25
 )
 
 max = 123
@@ -110,11 +111,54 @@ for personHold in personHoldIterator:
 
 ## Create a new resource
 
-TODO
+The following example creates a new person hold. This can be run in the REPL once the GUID's are filled in:
+
+```
+personGUID="TO BE ENTERED"
+personHoldCategoryGUID="TO BE ENTERED"
+
+personHoldToCreate = {
+    'endOn': '2099-12-31T00:00:00Z',
+    'person': {'id': personGUID},
+    'startOn': '2020-01-17T00:00:00Z',
+    'type': {
+      'category': 'academic',
+      'detail': {
+        'id': personHoldCategoryGUID
+      }
+    }
+  }
+
+createdPersonHold = ethosClient.createResource(
+  loginSession=loginSession,
+  resourceName="person-holds",
+  resourceDict=personHoldToCreate,
+  version="6"
+)
+
+print("Created a new person-hold resource with id ", createdPersonHold.version)
+print("GUID of returned resource ", createdPersonHold.resourceID)
+
+```
 
 ## Delete a resource
 
-TODO
+There are two ways to delete a resource. Firstly you can use the delete method from a returned resource.
+The following examples delete the resource created in the previous example:
+```
+createdPersonHold.delete(loginSession=loginSession)
+```
+
+The disadvantage to this method is that you must first query the resource to obtain an object.
+Another method to delete a resource requires just the resoruce guid:
+```
+recourceGUIDToBeDeleted = createdPersonHold.resourceID
+ethosClient.deleteResource(
+  loginSession=loginSession,
+  resourceName="person-holds",
+  resourceID=recourceGUIDToBeDeleted
+)
+```
 
 ## Call any other API
 

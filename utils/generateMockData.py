@@ -16,7 +16,8 @@ print("Using EllucianEthosPythonClient version", EllucianEthosPythonClient.__ver
 ethosBaseURL = Common.GetFromEnvironment("ETHOSBASEURL")
 ethosAPIKey = Common.GetFromEnvironment("ICETHOSDEVAPIKEY")
 
-personResourceID = "01e5f1c3-d0f0-445c-a095-c2884cd6fe4bX"
+personResourceID = "01e5f1c3-d0f0-445c-a095-c2884cd6fe4b"
+personHoldResourceID = "0e1f48c4-5669-4a94-92ad-d64d37af811a"
 
 ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
 
@@ -28,8 +29,13 @@ testRequests["getSinglePerson"] = {
   "method": "get",
   "postData": None
 }
+testRequests["getPersonHold"] = {
+  "url": "/api/person-holds/" + personHoldResourceID,
+  "method": "get",
+  "postData": None
+}
 
-requestToTest = testRequests["getSinglePerson"]
+requestToTest = testRequests["getPersonHold"]
 
 (result, sendingNoneData) = Common.executeAPICall(api=ethosClient, loginSession=loginSession, requestToTest=requestToTest)
 
