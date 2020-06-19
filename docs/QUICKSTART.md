@@ -86,15 +86,33 @@ One thing to remember about this method is that the entire person record is save
 elapsed between fetching the resource and saving it then there is a danger that any other changes to the source record
 will be overwritten. It's best to read a record then immediatadly write it back to minimise this.
 
+## Get a list of resources
+
+This library provides a python iterator which handles the pagination. The following example collects
+resources 25 at a time using the iterator. (It stops after 123 so it won't run forever) 
+
+You can run this in the REPL:
+```
+personHoldIterator = ethosClient.getResourceIterator(
+  loginSession=loginSession,
+  resourceName="person-holds",
+  version=None
+)
+
+max = 123
+cur = 0
+for personHold in personHoldIterator:
+  print("personHold", personHold.dict["person"]["id"], personHold.dict["startOn"])
+  cur += 1
+  if cur > max:
+    break
+```
+
 ## Create a new resource
 
 TODO
 
 ## Delete a resource
-
-TODO
-
-## Query back resources
 
 TODO
 
