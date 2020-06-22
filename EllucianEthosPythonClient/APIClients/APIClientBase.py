@@ -1,5 +1,6 @@
 import requests
 from .Mock import MockClass
+import threading
 
 class APIClientException(Exception):
   result = None
@@ -23,8 +24,9 @@ class APIClientNotFoundException(APIClientException):
 class APIClientBase():
   mock = None
   baseURL = None
+  requestLock = None
 
-  def __init__(self, baseURL, mock=None):
+  def __init__(self, baseURL, mock=None, forceOneRequestAtATime=False):
     if baseURL.endswith("/"):
       raise Exception("baseURL should not contain trailing slash: " + baseURL)
 
@@ -34,6 +36,11 @@ class APIClientBase():
       self.mock = mock
 
     self.baseURL = baseURL
+
+    if forceOneRequestAtATime:
+      self.requestLock = threading.Lock()
+    else:
+      self.requestLock = None
 
   def raiseResponseException(self, result):
     if (result.status_code == 404):

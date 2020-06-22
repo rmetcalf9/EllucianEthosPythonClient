@@ -232,6 +232,6 @@ resultDict = json.loads(result.content)
 
 This quick start guide has stepped through most of the major features of the library.
 The library has also an implementation of a poller which can be used to call the publish API and retrieve change 
-notifications it is explained in more detail here - [Poller GUide](POLLERGUIDE.md).
+notifications it is explained in more detail here - [Poller Guide](POLLERGUIDE.md).
 
 

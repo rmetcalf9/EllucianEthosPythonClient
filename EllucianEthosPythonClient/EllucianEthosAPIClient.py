@@ -8,7 +8,7 @@ class EllucianEthosAPIClient(APIClientBase):
   refreshAuthTokenIfRequired = None
 
   def __init__(self, baseURL, mock=None):
-    super().__init__(baseURL=baseURL, mock=mock)
+    super().__init__(baseURL=baseURL, mock=mock, forceOneRequestAtATime=True)
 
   def getLoginSessionFromAPIKey(self, apiKey):
     return EthosLoginSessionBasedOnAPIKey(APIClient=self, apikey=apiKey)

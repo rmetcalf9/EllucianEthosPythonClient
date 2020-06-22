@@ -19,7 +19,7 @@ class helpers(TestHelperSuperClass.testClassWithHelpers):
     self.ethosClient.mock.registerNextResponse(
       reqFnName="post",
       url="/api/" + resourceName,
-      data=resourceDict,
+      data=json.dumps(resourceDict),
       status_code=mockResponseStatusCode,
       contentBytes=base64.b64encode(json.dumps(mockResponse).encode()),
       contentHeaders=mockResponseHeaders,
@@ -67,7 +67,7 @@ class test_MainClient_createResource(helpers):
       resourceDict=personHold,
       mockResponse=mockResponse,
       mockResponseHeaders=mockResponseHeaders,
-      mockResponseStatusCode=mockResponseStatusCode,
+      mockResponseStatusCode=201,
       type="person-holds",
       version=version
     )
