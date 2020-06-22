@@ -8,14 +8,18 @@ It works by continously creating, then deleting person holds.
 import time
 import sys
 import os
-sys.path.insert(0, os.path.abspath('../utils'))
-import Common
 sys.path.insert(0, os.path.abspath('../'))
 import EllucianEthosPythonClient
 
 
-ethosBaseURL = Common.GetFromEnvironment("ETHOSBASEURL")
-ethosAPIKey = Common.GetFromEnvironment("ICETHOSDEVAPIKEY")
+#sys.path.insert(0, os.path.abspath('../utils'))
+#import Common
+#ethosBaseURL = Common.GetFromEnvironment("ETHOSBASEURL")
+#ethosAPIKey = Common.GetFromEnvironment("ICETHOSDEVAPIKEY")
+
+ethosBaseURL = os.environ["ETHOSBASEURL"]
+ethosAPIKey = os.environ["ICETHOSDEVAPIKEY"]
+
 
 print("Sample Start")
 
