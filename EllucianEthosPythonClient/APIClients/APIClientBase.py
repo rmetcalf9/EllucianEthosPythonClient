@@ -56,9 +56,6 @@ class APIClientBase():
 
 
   def sendRequest(self, reqFn, url, loginSession, data, origin, injectHeadersFn, refreshAttempted=False):
-    if self.baseURL == "MOCK":
-      return self.mock.returnNextResult(reqFnName=reqFn.__name__, url=url, data=data)
-
     # url must start with slash
     headers = {}
     if loginSession is not None:
@@ -68,29 +65,38 @@ class APIClientBase():
     if injectHeadersFn is not None:
       injectHeadersFn(headers)
 
-    result = reqFn(
-      url=self.baseURL + url,
-      data=data,
-      headers=headers
-    )
-    if result.status_code == 401:
-      if refreshAttempted:
-        self.raiseResponseException(result)
-      if loginSession is None:
-        self.raiseResponseException(result)
+    if self.baseURL == "MOCK":
+      return self.mock.returnNextResult(reqFnName=reqFn.__name__, url=url, data=data)
 
-      if loginSession.refresh(): #Returns true if loginSession refresh succeeded
-        self.sendRequest(
-          reqFn=reqFn,
-          url=url,
-          loginSession=loginSession,
-          data=data,
-          origin=origin,
-          injectHeadersFn=injectHeadersFn,
-          refreshAttempted=True
-        )
-      else:
-        self.raiseResponseException(result)
+    try:
+      if self.requestLock is not None:
+        self.requestLock.acquire(blocking=True, timeout=-1)
+      result = reqFn(
+        url=self.baseURL + url,
+        data=data,
+        headers=headers
+      )
+      if result.status_code == 401:
+        if refreshAttempted:
+          self.raiseResponseException(result)
+        if loginSession is None:
+          self.raiseResponseException(result)
+
+        if loginSession.refresh(): #Returns true if loginSession refresh succeeded
+          self.sendRequest(
+            reqFn=reqFn,
+            url=url,
+            loginSession=loginSession,
+            data=data,
+            origin=origin,
+            injectHeadersFn=injectHeadersFn,
+            refreshAttempted=True
+          )
+        else:
+          self.raiseResponseException(result)
+    finally:
+      if self.requestLock is not None:
+        self.requestLock.release()
 
     return result
 
