@@ -2,13 +2,19 @@ from .APIClients import APIClientBase
 from .EthosLoginSession import EthosLoginSessionBasedOnAPIKey
 from .ResourceWrappers import getResourceWrapper
 from .ResourceIterator import ResourceIterator
+from .EthosChangeNotificationPollerThread import EthosChangeNotificationPollerThread
 import json
+
+class CanNotStartChangeNotificationPollerTwiceException(Exception):
+  pass
 
 class EllucianEthosAPIClient(APIClientBase):
   refreshAuthTokenIfRequired = None
+  changeNotificationPollerThread = None
 
   def __init__(self, baseURL, mock=None):
     super().__init__(baseURL=baseURL, mock=mock, forceOneRequestAtATime=True)
+    self.changeNotificationPollerThread = None
 
   def getLoginSessionFromAPIKey(self, apiKey):
     return EthosLoginSessionBasedOnAPIKey(APIClient=self, apikey=apiKey)
@@ -89,3 +95,25 @@ class EllucianEthosAPIClient(APIClientBase):
     )
     if result.status_code != 200:
       self.raiseResponseException(result)
+
+  def startChangeNotificationPollerThread(
+    self,
+    loginSession,
+    frequency, #number of seconds between fetches
+    pageSize, #number of change notifications to get per requests
+    maxRequests #maximum number of rquests to use in each fecth
+  ):
+    if self.changeNotificationPollerThread is not None:
+      raise CanNotStartChangeNotificationPollerTwiceException()
+    self.changeNotificationPollerThread = EthosChangeNotificationPollerThread(
+      clientAPIInstance=self,
+      loginSession=loginSession,
+      frequency=frequency,
+      pageSize=pageSize,
+      maxRequests=maxRequests
+    )
+    self.changeNotificationPollerThread.start()
+
+  def close(self):
+    if self.changeNotificationPollerThread is not None:
+      self.changeNotificationPollerThread.close()
