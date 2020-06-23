@@ -54,8 +54,8 @@ class APIClientBase():
   def testGetMockObj(self):
     return self.mock
 
-
-  def sendRequest(self, reqFn, url, loginSession, data, origin, injectHeadersFn, refreshAttempted=False):
+  #skipLockCheck is used for when the refresh process itself is sending a request
+  def sendRequest(self, reqFn, url, loginSession, data, origin, injectHeadersFn, postRefreshCall=False, skipLockCheck=False):
     # url must start with slash
     headers = {}
     if loginSession is not None:
@@ -68,34 +68,41 @@ class APIClientBase():
     if self.baseURL == "MOCK":
       return self.mock.returnNextResult(reqFnName=reqFn.__name__, url=url, data=data)
 
+    lockWasObtained = False
     try:
       if self.requestLock is not None:
-        self.requestLock.acquire(blocking=True, timeout=-1)
+        if not skipLockCheck:
+          if not lockWasObtained:
+            self.requestLock.acquire(blocking=True, timeout=-1)
+          lockWasObtained = True
       result = reqFn(
         url=self.baseURL + url,
         data=data,
         headers=headers
       )
       if result.status_code == 401:
-        if refreshAttempted:
+        if postRefreshCall:
           self.raiseResponseException(result)
         if loginSession is None:
           self.raiseResponseException(result)
 
         if loginSession.refresh(): #Returns true if loginSession refresh succeeded
-          self.sendRequest(
+          # We sendanother request withou lock checking
+          #  when this is complete the local finally will be called
+          #  so the lock will be released then
+          return self.sendRequest(
             reqFn=reqFn,
             url=url,
             loginSession=loginSession,
             data=data,
             origin=origin,
             injectHeadersFn=injectHeadersFn,
-            refreshAttempted=True
+            skipLockCheck=True,
+            postRefreshCall=True
           )
-        else:
-          self.raiseResponseException(result)
+        self.raiseResponseException(result)
     finally:
-      if self.requestLock is not None:
+      if lockWasObtained:
         self.requestLock.release()
 
     return result

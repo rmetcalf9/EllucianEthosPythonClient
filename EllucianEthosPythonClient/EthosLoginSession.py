@@ -1,5 +1,5 @@
 from .APIClients import LoginSession
-
+import requests
 
 class EthosLoginSessionBasedOnAPIKey(LoginSession):
   APIClient = None
@@ -13,7 +13,7 @@ class EthosLoginSessionBasedOnAPIKey(LoginSession):
     if self.currentAuthKey is None:
       raise Exception("Failed to establish login session using APIKey")
 
-  def _getNewAuthToken(self):
+  def _getNewAuthToken(self, fromRefresh=False):
     self.currentAuthKey = None
     charset = "UTF-8"
 
@@ -22,13 +22,17 @@ class EthosLoginSessionBasedOnAPIKey(LoginSession):
       headers["Content-Type"] = "application/x-www-form-urlencoded" + ";charset=" + charset
       headers["Authorization"] = "Bearer " + self.apikey
 
-    result = self.APIClient.sendPostRequest(
+    result = self.APIClient.sendRequest(
+      reqFn=requests.post,
+      origin=None,
       url="/auth",
       data=[],
       loginSession=None,
-      injectHeadersFn=injectHeaderFN
+      injectHeadersFn=injectHeaderFN,
+      skipLockCheck=fromRefresh
     )
     if result.status_code != 200:
+      #print("_getNewAuthToken result got status code", result.status_code, " NOT 200")
       return None
 
     self.currentAuthKey = result.content.decode(charset)
@@ -37,7 +41,11 @@ class EthosLoginSessionBasedOnAPIKey(LoginSession):
     headers["Authorization"] = "Bearer " + self.currentAuthKey
 
   def refresh(self):
-    self._getNewAuthToken()
+    #print("Call to EthosLoginSession Refresh - getting new token")
+    self._getNewAuthToken(fromRefresh=True)
+    #print("get new auth token returned")
     if self.currentAuthKey is None:
+      #print("no auth key so returning false")
       return False
+    #print("Returning true to signal to retry origional request")
     return True

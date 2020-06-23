@@ -12,19 +12,23 @@ class helpers(TestHelperSuperClass.testClassWithHelpers):
 @TestHelperSuperClass.wipd
 class test_MainClient_poller(helpers):
   def test_notAbleToStartPollerTwice(self):
+    pollerQueue = queue.Queue()
+
     self.ethosClient.startChangeNotificationPollerThread(
       loginSession=None,
       frequency=60, #number of seconds between fetches
-      pageSize=25, #number of change notifications to get per requests
-      maxRequests=4 #maximum number of rquests to use in each fecth
+      pageLimit=20, #number of change notifications to get per requests
+      maxRequests=4, #maximum number of rquests to use in each fecth
+      pollerQueue=pollerQueue
     )
 
     with self.assertRaises(EllucianEthosPythonClient.CanNotStartChangeNotificationPollerTwiceException) as context:
       self.ethosClient.startChangeNotificationPollerThread(
         loginSession=None,
         frequency=60, #number of seconds between fetches
-        pageSize=25, #number of change notifications to get per requests
-        maxRequests=4 #maximum number of rquests to use in each fecth
+        pageLimit=20, #number of change notifications to get per requests
+        maxRequests=4, #maximum number of rquests to use in each fecth
+        pollerQueue=pollerQueue
       )
 
     self.ethosClient.close()
@@ -36,8 +40,9 @@ class test_MainClient_poller(helpers):
     self.ethosClient.startChangeNotificationPollerThread(
       loginSession=None,
       frequency=60, #number of seconds between fetches
-      pageSize=25, #number of change notifications to get per requests
-      maxRequests=4 #maximum number of rquests to use in each fecth
+      pageLimit=20, #number of change notifications to get per requests
+      maxRequests=4, #maximum number of rquests to use in each fecth
+      pollerQueue=pollerQueue
     )
 
     self.ethosClient.close()

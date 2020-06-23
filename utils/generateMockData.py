@@ -34,8 +34,13 @@ testRequests["getPersonHold"] = {
   "method": "get",
   "postData": None
 }
+testRequests["consumeChangeNotification"] = {
+  "url": "/consume?limit=20",
+  "method": "get",
+  "postData": None
+}
 
-requestToTest = testRequests["getPersonHold"]
+requestToTest = testRequests["consumeChangeNotification"]
 
 (result, sendingNoneData) = Common.executeAPICall(api=ethosClient, loginSession=loginSession, requestToTest=requestToTest)
 

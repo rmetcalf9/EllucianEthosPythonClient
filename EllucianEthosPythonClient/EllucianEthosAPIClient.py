@@ -100,8 +100,9 @@ class EllucianEthosAPIClient(APIClientBase):
     self,
     loginSession,
     frequency, #number of seconds between fetches
-    pageSize, #number of change notifications to get per requests
-    maxRequests #maximum number of rquests to use in each fecth
+    pageLimit, #number of change notifications to get per requests
+    maxRequests, #maximum number of rquests to use in each fecth
+    pollerQueue
   ):
     if self.changeNotificationPollerThread is not None:
       raise CanNotStartChangeNotificationPollerTwiceException()
@@ -109,10 +110,15 @@ class EllucianEthosAPIClient(APIClientBase):
       clientAPIInstance=self,
       loginSession=loginSession,
       frequency=frequency,
-      pageSize=pageSize,
-      maxRequests=maxRequests
+      pageLimit=pageLimit,
+      maxRequests=maxRequests,
+      pollerQueue=pollerQueue
     )
     self.changeNotificationPollerThread.start()
+
+  def healthCheck(self):
+    if self.changeNotificationPollerThread is not None:
+      self.changeNotificationPollerThread.healthCheck()
 
   def close(self):
     if self.changeNotificationPollerThread is not None:

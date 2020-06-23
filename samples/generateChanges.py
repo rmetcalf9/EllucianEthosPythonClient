@@ -8,7 +8,11 @@ It works by continously creating, then deleting person holds.
 import time
 import sys
 import os
-##sys.path.insert(0, os.path.abspath('../'))
+
+##If we add the parent directory to the path we will use the development version of the library
+##  rather than the insalled version
+sys.path.insert(0, os.path.abspath('../'))
+
 import EllucianEthosPythonClient
 import queue
 
@@ -21,6 +25,7 @@ import queue
 ethosBaseURL = os.environ["ETHOSBASEURL"]
 ethosAPIKey = os.environ["ICETHOSDEVAPIKEY"]
 
+changeDelayTime = 3
 
 print("Sample Start")
 
@@ -101,7 +106,7 @@ try:
       deletePersonHold(ite)
       print("-", end="", flush=True)
 
-    time.sleep(0.5)
+    time.sleep(changeDelayTime)
 except KeyboardInterrupt:
     print('\nctl+c pressed - so terminating')
 
@@ -110,5 +115,8 @@ while not q.empty():
   ite = q.get()
   deletePersonHold(ite)
   print("-", end="", flush=True)
+
+ethosClient.close()
+
 
 print("\nSample End")
