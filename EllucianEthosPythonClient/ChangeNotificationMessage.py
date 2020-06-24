@@ -38,7 +38,7 @@ class ChangeNotificationMessage():
     if dict["contentType"] == "resource-representation":
       self.resourceWrapper = getResourceWrapper(
         clientAPIInstance=self.clientAPIInstance,
-        dict=dict,
+        dict=dict["content"],
         version=self.resourceVersion,
         resourseName=self.resourceName
       )

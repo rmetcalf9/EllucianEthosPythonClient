@@ -20,6 +20,8 @@ class EllucianEthosAPIClient(APIClientBase):
     return EthosLoginSessionBasedOnAPIKey(APIClient=self, apikey=apiKey)
 
   def _getResourceRAW(self, loginSession, resourceName, resourceID, version=None):
+    #print("_getResourceRAW", resourceName, resourceID, version)
+
     def injectHeaderFN(headers):
       if version is not None:
         headers["Accept"] = "application/vnd.hedtech.integration.v" + version + "+json"
@@ -150,3 +152,4 @@ class EllucianEthosAPIClient(APIClientBase):
   def close(self):
     if self.changeNotificationPollerThread is not None:
       self.changeNotificationPollerThread.close()
+      self.changeNotificationPollerThread = None

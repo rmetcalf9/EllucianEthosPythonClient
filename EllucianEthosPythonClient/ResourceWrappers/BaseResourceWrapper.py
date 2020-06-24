@@ -57,13 +57,14 @@ class BaseResourceWrapper():
       self.clientAPIInstance.raiseResponseException(result)
 
   def refresh(self, loginSession):
-
     (resultContent, versionReturned, resourceName) = self.clientAPIInstance._getResourceRAW(
       loginSession=loginSession,
       resourceName=self.resourceName,
       resourceID=self.resourceID,
       version=self.version
     )
+    if versionReturned is None:
+      raise Exception("Refresh failed - no resource found")
     if versionReturned != self.version:
       raise Exception("Internal Error wrong version on refresh")
     if resourceName != self.resourceName:

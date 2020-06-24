@@ -168,6 +168,8 @@ The resource wrapper includes refresh function can do this automatically:
 changeNotificationRecieved.resourceWrapper.refresh(loginSession=loginSession)
 ```
 
+(In the test example person-holds are being created and deleted so the refresh may fail in this case)
+
 This causes API client to update the resource data with new information from Ethos.
 
 We wouldn't normally handle the messages one at a time in the REPL. Lets output everything we have in our queue:
@@ -181,13 +183,13 @@ while changeNotificationQueue.qsize()>0:
 You should see everything that has been recieved in the queue.
 
 
-See [simplePollerExample.py](../samples/simplePollerExample.py) for an example of a python program that uses this method
-to process Ethos change notifications. This shows how you can continously process the messages in the python queue.
-
 Finally before we terminate we must remember we have started a background thread. It should be stopped as follows:
 ```
 ethosClient.close()
 ```
+
+See [simplePollerExample.py](../samples/simplePollerExample.py) for an example of a python program that uses this method
+to process Ethos change notifications. This shows how you can continously process the messages in the python queue.
 
 ## Pros an cons of the queue based method
 
@@ -233,7 +235,7 @@ application is started again it can start from the last successfully recorded po
 ```
 def processSingleMessage(apiClient, messageid, changeNotification):
     # in a real example this part would write to file or update a db
-    print("received ", changeNotificationRecieved.operation,  changeNotificationRecieved.resourceName, changeNotificationRecieved.resourceID)
+    print("received msgid ", messageid, changeNotification.operation,  changeNotification.resourceName, changeNotification.resourceID)
     with open(lastprocessid_FileName, 'w') as filetowrite:
         filetowrite.write(messageid)
     return True
@@ -256,7 +258,7 @@ In order to start the thread we will need to fetch the lastprocessid from the fi
 ```
 lastProcessedID=""
 with open(lastprocessid_FileName, 'r') as filetowrite:
-    lastprocessid=filetowrite.read()
+    lastProcessedID=filetowrite.read()
 ```
 
 Then just as before we start the poller thread but this via a different method which allows us to pass the function we 
@@ -280,10 +282,14 @@ ethosClient.healthCheck()
 
 If the generateChanges function you started before is still running you should see the output appear on the screen.
 
-When done the backgroudn thread still needs to be stopped: 
+When done the background thread still needs to be stopped: 
 ```
 ethosClient.close()
 ```  
+
+See [simpleFunctionModePollerExample.py](../samples/simpleFunctionModePollerExample.py) for an example of a python program that uses this method
+to process Ethos change notifications.
+
 
  ## Pros an cons of the function based method
 

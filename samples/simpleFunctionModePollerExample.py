@@ -19,18 +19,22 @@ ethosPollerAppAPIKey = os.environ["ETHOSPOLLERAPIKEY"]
 
 lastprocessid_FileName = "./pollerguideTempFileForLastProcessedID.txt"
 
+ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
+loginSession = ethosClient.getLoginSessionFromAPIKey(apiKey=ethosPollerAppAPIKey)
+loginSession2 = ethosClient.getLoginSessionFromAPIKey(apiKey=os.environ["ICETHOSDEVAPIKEY"])
+
 
 def processSingleMessage(apiClient, messageid, changeNotification):
   # in a real example this part would write to file or update a db
-  print("received ", changeNotification.operation, changeNotification.resourceName, changeNotification.resourceID)
+  ##print("received ", changeNotification.operation, changeNotification.resourceName, changeNotification.resourceID)
+  if changeNotification.resourceWrapper is not None:
+    changeNotification.resourceWrapper.refresh(loginSession=loginSession2)
   with open(lastprocessid_FileName, 'w') as filetowrite:
     filetowrite.write(messageid)
   return True
 
 print("Start")
 
-ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
-loginSession = ethosClient.getLoginSessionFromAPIKey(apiKey=ethosPollerAppAPIKey)
 
 print("Reading lastprocessedid from file")
 lastProcessedID=""
