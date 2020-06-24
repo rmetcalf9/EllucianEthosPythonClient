@@ -13,7 +13,7 @@ class EthosChangeNotificationPollerThread(WorkerThread):
   loginSession = None
   pageLimit = None
   maxRequests = None
-  pollerQueue = None
+  lastProcessedID = None
 
   def __init__(
     self,
@@ -22,14 +22,14 @@ class EthosChangeNotificationPollerThread(WorkerThread):
     frequency,
     pageLimit,
     maxRequests,
-    pollerQueue
+    lastProcessedID
   ):
     super().__init__(sleepTime=0.1, frequency=frequency)
     self.clientAPIInstance=clientAPIInstance
     self.loginSession=loginSession
     self.pageLimit=pageLimit
     self.maxRequests=maxRequests
-    self.pollerQueue = pollerQueue
+    self.lastProcessedID = lastProcessedID
 
   def worker(self):
     fetchRunning = True
@@ -43,9 +43,11 @@ class EthosChangeNotificationPollerThread(WorkerThread):
         fetchRunning = False
 
   def requestBatchOfPagesAndReturnRemainingCount(self):
-
+    url = "/consume?limit=" + str(self.pageLimit)
+    if self.lastProcessedID is not None:
+      url += "&lastProcessedID=" + self.lastProcessedID
     result = self.clientAPIInstance.sendGetRequest(
-      url="/consume?limit=" + str(self.pageLimit),
+      url=url,
       loginSession=self.loginSession,
       injectHeadersFn=None
     )
@@ -53,11 +55,67 @@ class EthosChangeNotificationPollerThread(WorkerThread):
       self.clientAPIInstance.raiseResponseException(result)
 
     remainingMessages = int(result.headers["x-remaining"])
-
     resultDict = json.loads(result.content)
 
     for curResult in resultDict:
-      self.pollerQueue.put(ChangeNotificationMessage(dict=curResult, clientAPIInstance=self.clientAPIInstance))
-
+      changeNotification = ChangeNotificationMessage(dict=curResult, clientAPIInstance=self.clientAPIInstance)
+      self.processMessage(changeNotification=changeNotification)
+      if self.lastProcessedID is not None:
+        self.lastProcessedID = changeNotification.messageID
 
     return remainingMessages
+
+  def processMessage(self, changeNotification):
+    pass
+
+
+class EthosChangeNotificationPollerThreadQueueMode(EthosChangeNotificationPollerThread):
+  pollerQueue = None
+
+  def __init__(
+    self,
+    clientAPIInstance,
+    loginSession,
+    frequency,
+    pageLimit,
+    maxRequests,
+    pollerQueue
+  ):
+    super().__init__(
+      clientAPIInstance=clientAPIInstance,
+      loginSession=loginSession,
+      frequency=frequency,
+      pageLimit=pageLimit,
+      maxRequests=maxRequests,
+      lastProcessedID=None
+    )
+    self.pollerQueue = pollerQueue
+
+  def processMessage(self, changeNotification):
+    self.pollerQueue.put(changeNotification)
+
+class EthosChangeNotificationPollerThreadFunctionMode(EthosChangeNotificationPollerThread):
+  messageProcessingFunction = None
+
+  def __init__(
+    self,
+    clientAPIInstance,
+    loginSession,
+    frequency,
+    pageLimit,
+    maxRequests,
+    lastProcessedID,
+    messageProcessingFunction
+  ):
+    super().__init__(
+      clientAPIInstance=clientAPIInstance,
+      loginSession=loginSession,
+      frequency=frequency,
+      pageLimit=pageLimit,
+      maxRequests=maxRequests,
+      lastProcessedID=lastProcessedID
+    )
+    self.messageProcessingFunction = messageProcessingFunction
+
+  def processMessage(self, changeNotification):
+    self.messageProcessingFunction(apiClient=self.clientAPIInstance, messageid=changeNotification.messageID, changeNotification=changeNotification)

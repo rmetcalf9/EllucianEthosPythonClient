@@ -11,7 +11,7 @@ class helpers(TestHelperSuperClass.testClassWithHelpers):
 
 @TestHelperSuperClass.wipd
 class test_MainClient_poller(helpers):
-  def test_notAbleToStartPollerTwice(self):
+  def test_notAbleToStartPollerTwiceWithoutClose(self):
     pollerQueue = queue.Queue()
 
     mockResponse={}

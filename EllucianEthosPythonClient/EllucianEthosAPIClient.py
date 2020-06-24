@@ -2,7 +2,7 @@ from .APIClients import APIClientBase
 from .EthosLoginSession import EthosLoginSessionBasedOnAPIKey
 from .ResourceWrappers import getResourceWrapper
 from .ResourceIterator import ResourceIterator
-from .EthosChangeNotificationPollerThread import EthosChangeNotificationPollerThread
+from .EthosChangeNotificationPollerThread import EthosChangeNotificationPollerThreadQueueMode, EthosChangeNotificationPollerThreadFunctionMode
 import json
 
 class CanNotStartChangeNotificationPollerTwiceException(Exception):
@@ -111,13 +111,35 @@ class EllucianEthosAPIClient(APIClientBase):
   ):
     if self.changeNotificationPollerThread is not None:
       raise CanNotStartChangeNotificationPollerTwiceException()
-    self.changeNotificationPollerThread = EthosChangeNotificationPollerThread(
+    self.changeNotificationPollerThread = EthosChangeNotificationPollerThreadQueueMode(
       clientAPIInstance=self,
       loginSession=loginSession,
       frequency=frequency,
       pageLimit=pageLimit,
       maxRequests=maxRequests,
       pollerQueue=pollerQueue
+    )
+    self.changeNotificationPollerThread.start()
+
+  def startChangeNotificationPollerThreadInFunctionMode(
+    self,
+    loginSession,
+    frequency,  # number of seconds between fetches
+    pageLimit,  # number of change notifications to get per requests
+    maxRequests,  # maximum number of rquests to use in each fecth
+    lastProcessedID,
+    messageProcessingFunction
+  ):
+    if self.changeNotificationPollerThread is not None:
+      raise CanNotStartChangeNotificationPollerTwiceException()
+    self.changeNotificationPollerThread = EthosChangeNotificationPollerThreadFunctionMode(
+      clientAPIInstance=self,
+      loginSession=loginSession,
+      frequency=frequency,
+      pageLimit=pageLimit,
+      maxRequests=maxRequests,
+      lastProcessedID=lastProcessedID,
+      messageProcessingFunction=messageProcessingFunction
     )
     self.changeNotificationPollerThread.start()
 
