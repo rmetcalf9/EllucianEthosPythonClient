@@ -12,7 +12,8 @@ def getMimimumResourceMockResult(
 
 def getPersonMockResult(
   personGUID,
-  version
+  version,
+  firstName="Joe"
 ):
   responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + version + "+json"}
   response = {
@@ -23,7 +24,7 @@ def getPersonMockResult(
     "gender": "male",
     "id": personGUID,
     "names": [
-      {"firstName": "Joe", "fullName": "Joe Blogs", "lastName": "Blogs", "preference": "preferred", "title": "Mr",
+      {"firstName": firstName, "fullName": "Joe Blogs", "lastName": "Blogs", "preference": "preferred", "title": "Mr",
        "type": {"category": "personal"}}],
     "privacyStatus": {"privacyCategory": "unrestricted"},
     "roles": [{"role": "student", "startOn": "2020-01-01T00:00:00+00:00"}]

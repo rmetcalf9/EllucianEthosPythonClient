@@ -79,3 +79,34 @@ class test_MainClient_getResource(helpers):
     )
     self.assertEqual(person, None)
 
+  def test_refreshPersonNoVersionSpecfied(self):
+    personVersionInResponse = "12"
+    personGUID = "testGUID"
+    mockResponse, mockResponseHeaders, mockResponseStatusCode = TestingHelper.getPersonMockResult(personGUID=personGUID, version=personVersionInResponse)
+
+    person = self.getResourse(
+      guid=personGUID,
+      mockResponse=mockResponse,
+      mockResponseHeaders=mockResponseHeaders,
+      mockResponseStatusCode=mockResponseStatusCode
+    )
+    self.assertEqual(type(person).__name__, "PersonsV" + str(personVersionInResponse))
+    self.assertEqual(person.version, personVersionInResponse)
+    self.assertEqual(person.dict["names"][0]["firstName"],"Joe")
+
+    mockResponse2, mockResponseHeaders2, mockResponseStatusCode2 = TestingHelper.getPersonMockResult(personGUID=personGUID, version=personVersionInResponse, firstName="Joe Number 2")
+    data=None
+    self.ethosClient.mock.registerNextResponse(
+      reqFnName="get",
+      url="/api/" + "persons" + "/" + personGUID,
+      data=data,
+      status_code=mockResponseStatusCode2,
+      contentBytes=base64.b64encode(json.dumps(mockResponse2).encode()),
+      contentHeaders=mockResponseHeaders2,
+      ignoreData=False
+    )
+    person.refresh(loginSession=None)
+
+    self.assertEqual(type(person).__name__, "PersonsV" + str(personVersionInResponse))
+    self.assertEqual(person.version, personVersionInResponse)
+    self.assertEqual(person.dict["names"][0]["firstName"],"Joe Number 2")

@@ -55,3 +55,16 @@ class BaseResourceWrapper():
     )
     if result.status_code != 200:
       self.clientAPIInstance.raiseResponseException(result)
+
+  def refresh(self, loginSession):
+    (resultContent, versionReturned, resourceName) = self.clientAPIInstance._getResourceRAW(
+      loginSession=loginSession,
+      resourceName=self.resourceName,
+      resourceID=self.resourceID,
+      version=self.version
+    )
+    if versionReturned != self.version:
+      raise Exception("Internal Error wrong version on refresh")
+    if resourceName != self.resourceName:
+      raise Exception("Internal Error wrong resourceName on refresh")
+    self.dict = json.loads(resultContent)

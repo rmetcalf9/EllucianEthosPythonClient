@@ -14,6 +14,17 @@ class test_MainClient_poller(helpers):
   def test_notAbleToStartPollerTwice(self):
     pollerQueue = queue.Queue()
 
+    mockResponse={}
+    self.ethosClient.mock.registerNextResponse(
+      reqFnName="get",
+      url="/consume?limit=20",
+      data=None,
+      status_code=200,
+      contentBytes=base64.b64encode(json.dumps(mockResponse).encode()),
+      contentHeaders={ "x-remaining": "0"},
+      ignoreData=True
+    )
+
     self.ethosClient.startChangeNotificationPollerThread(
       loginSession=None,
       frequency=60, #number of seconds between fetches
@@ -37,6 +48,16 @@ class test_MainClient_poller(helpers):
   def test_startThenStopPoller(self):
     pollerQueue = queue.Queue()
 
+    mockResponse={}
+    self.ethosClient.mock.registerNextResponse(
+      reqFnName="get",
+      url="/consume?limit=20",
+      data=None,
+      status_code=200,
+      contentBytes=base64.b64encode(json.dumps(mockResponse).encode()),
+      contentHeaders={ "x-remaining": "0"},
+      ignoreData=True
+    )
     self.ethosClient.startChangeNotificationPollerThread(
       loginSession=None,
       frequency=60, #number of seconds between fetches

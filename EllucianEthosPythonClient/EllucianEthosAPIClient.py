@@ -19,8 +19,7 @@ class EllucianEthosAPIClient(APIClientBase):
   def getLoginSessionFromAPIKey(self, apiKey):
     return EthosLoginSessionBasedOnAPIKey(APIClient=self, apikey=apiKey)
 
-  #Doc list https://xedocs.ellucian.com/xe-banner-api/ethos_apis/foundation/persons/person_get_guid_v6.html
-  def getResource(self, loginSession, resourceName, resourceID, version=None):
+  def _getResourceRAW(self, loginSession, resourceName, resourceID, version=None):
     def injectHeaderFN(headers):
       if version is not None:
         headers["Accept"] = "application/vnd.hedtech.integration.v" + version + "+json"
@@ -31,13 +30,19 @@ class EllucianEthosAPIClient(APIClientBase):
       injectHeadersFn=injectHeaderFN
     )
     if result.status_code == 404:
-      return None
+      return (None, None, None)
     if result.status_code != 200:
       self.raiseResponseException(result)
 
     versionReturned = self.getVersionIntFromHeader(result.headers["x-hedtech-media-type"])
+    return (result.content, versionReturned, resourceName)
 
-    return getResourceWrapper(clientAPIInstance=self, dict=json.loads(result.content), version=versionReturned, resourseName=resourceName)
+  #Doc list https://xedocs.ellucian.com/xe-banner-api/ethos_apis/foundation/persons/person_get_guid_v6.html
+  def getResource(self, loginSession, resourceName, resourceID, version=None):
+    (resultContent, versionReturned, resourceName) = self._getResourceRAW(loginSession=loginSession, resourceName=resourceName, resourceID=resourceID, version=version)
+    if resultContent is None:
+      return None
+    return getResourceWrapper(clientAPIInstance=self, dict=json.loads(resultContent), version=versionReturned, resourseName=resourceName)
 
   def getResourceIterator(self, loginSession, resourceName, version=None, pageSize=25):
     return ResourceIterator(self, loginSession, resourceName, version, pageSize)
