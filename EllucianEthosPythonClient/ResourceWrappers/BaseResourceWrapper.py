@@ -57,6 +57,7 @@ class BaseResourceWrapper():
       self.clientAPIInstance.raiseResponseException(result)
 
   def refresh(self, loginSession):
+
     (resultContent, versionReturned, resourceName) = self.clientAPIInstance._getResourceRAW(
       loginSession=loginSession,
       resourceName=self.resourceName,

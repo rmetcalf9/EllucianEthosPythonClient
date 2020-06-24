@@ -3,6 +3,7 @@ import pytz
 from .ResourceWrappers import getResourceWrapper
 
 class ChangeNotificationMessage():
+  clientAPIInstance = None
   messageID = None
   published = None
   operation = None
@@ -14,6 +15,7 @@ class ChangeNotificationMessage():
   #dict = None
 
   def __init__(self, dict, clientAPIInstance):
+    self.clientAPIInstance = clientAPIInstance
     self.messageID = dict["id"]
 
     dt = parse(dict["published"])
@@ -35,7 +37,7 @@ class ChangeNotificationMessage():
     # for operation=created, the content type is sent as resource-representation
     if dict["contentType"] == "resource-representation":
       self.resourceWrapper = getResourceWrapper(
-        clientAPIInstance=self,
+        clientAPIInstance=self.clientAPIInstance,
         dict=dict,
         version=self.resourceVersion,
         resourseName=self.resourceName

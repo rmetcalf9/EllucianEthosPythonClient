@@ -22,6 +22,7 @@ There are two ways of using the Poller
  Before starting in Ethos you should:
  
   - Create an application in the Ethos Integrations UI. Make sure the application is subscribed to the "person-holds" resource.
+  - Created application needs the credentials setup so it can query person-holds resources
   - Get the APIkey for the application that is created
  
  ## Local developer machine setup
@@ -120,7 +121,7 @@ re-raise any exceptions it has encountered.
 ethosClient.healthCheck()
 ```
 
-If you leave this running for a while you should notice the number of waiting messages for the application in Ethos 
+If you leave the thread running for a while you should notice the number of waiting messages for the application in Ethos 
 starts to decrease. You can then re-run the following command and see how many messages are waiting in the queue:
 ```
 print(changeNotificationQueue.qsize())
