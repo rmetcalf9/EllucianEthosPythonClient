@@ -43,11 +43,14 @@ class EthosChangeNotificationPollerThread(WorkerThread):
         fetchRunning = False
 
   def requestBatchOfPagesAndReturnRemainingCount(self):
-    url = "/consume?limit=" + str(self.pageLimit)
+    params = {
+      "limit": str(self.pageLimit)
+    }
     if self.lastProcessedID is not None:
-      url += "&lastProcessedID=" + self.lastProcessedID
+      params["lastProcessedID"] = self.lastProcessedID
     result = self.clientAPIInstance.sendGetRequest(
-      url=url,
+      url="/consume",
+      params=params,
       loginSession=self.loginSession,
       injectHeadersFn=None
     )

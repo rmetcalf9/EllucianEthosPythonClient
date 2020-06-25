@@ -1,6 +1,7 @@
 import requests
 from .Mock import MockClass
 import threading
+from urllib.parse import urlencode
 
 class APIClientException(Exception):
   result = None
@@ -55,7 +56,7 @@ class APIClientBase():
     return self.mock
 
   #skipLockCheck is used for when the refresh process itself is sending a request
-  def sendRequest(self, reqFn, url, loginSession, data, origin, injectHeadersFn, postRefreshCall=False, skipLockCheck=False):
+  def sendRequest(self, reqFn, url, loginSession, data, origin, injectHeadersFn, postRefreshCall=False, skipLockCheck=False, params=None):
     # url must start with slash
     headers = {}
     if loginSession is not None:
@@ -66,6 +67,9 @@ class APIClientBase():
       injectHeadersFn(headers)
 
     if self.baseURL == "MOCK":
+      if params is not None:
+        if len(params.keys()) > 0:
+          url += "?" + urlencode(params)
       return self.mock.returnNextResult(reqFnName=reqFn.__name__, url=url, data=data)
 
     lockWasObtained = False
@@ -77,6 +81,7 @@ class APIClientBase():
           lockWasObtained = True
       result = reqFn(
         url=self.baseURL + url,
+        params=params,
         data=data,
         headers=headers
       )
@@ -107,14 +112,14 @@ class APIClientBase():
 
     return result
 
-  def sendGetRequest(self, url, loginSession, origin=None, injectHeadersFn=None):
-    return self.sendRequest(reqFn=requests.get, url=url, loginSession=loginSession, data=None, origin=origin, injectHeadersFn=injectHeadersFn)
+  def sendGetRequest(self, url, loginSession, origin=None, injectHeadersFn=None, params=None):
+    return self.sendRequest(reqFn=requests.get, url=url, loginSession=loginSession, data=None, origin=origin, injectHeadersFn=injectHeadersFn, params=params)
 
-  def sendPostRequest(self, url, loginSession, data, origin=None, injectHeadersFn=None):
-    return self.sendRequest(reqFn=requests.post, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn)
+  def sendPostRequest(self, url, loginSession, data, origin=None, injectHeadersFn=None, params=None):
+    return self.sendRequest(reqFn=requests.post, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn, params=params)
 
-  def sendPutRequest(self, url, loginSession, data, origin=None, injectHeadersFn=None):
-    return self.sendRequest(reqFn=requests.put, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn)
+  def sendPutRequest(self, url, loginSession, data, origin=None, injectHeadersFn=None, params=None):
+    return self.sendRequest(reqFn=requests.put, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn, params=params)
 
-  def sendDeleteRequest(self, url, loginSession, data=None, origin=None, injectHeadersFn=None):
-    return self.sendRequest(reqFn=requests.delete, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn)
+  def sendDeleteRequest(self, url, loginSession, data=None, origin=None, injectHeadersFn=None, params=None):
+    return self.sendRequest(reqFn=requests.delete, url=url, loginSession=loginSession, data=data, origin=origin, injectHeadersFn=injectHeadersFn, params=params)

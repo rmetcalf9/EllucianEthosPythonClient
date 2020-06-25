@@ -42,8 +42,13 @@ class ResourceIterator:
       if self.version is not None:
         headers["Accept"] = "application/vnd.hedtech.integration.v" + self.version + "+json"
 
+    params = {
+      "limit": str(self.pageSize),
+      "offset": str(self.curOffset)
+    }
     result = self.apiClient.sendGetRequest(
-      url="/api/" + self.resourceName + "?limit=" + str(self.pageSize) + "&offset=" + str(self.curOffset),
+      url="/api/" + self.resourceName,
+      params=params,
       loginSession=self.loginSession,
       injectHeadersFn=injectHeaderFN
     )
