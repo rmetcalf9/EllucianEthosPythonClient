@@ -1,10 +1,10 @@
-# EllucianEthosPythonClient
+ # EllucianEthosPythonClient
 Python Client Library for interfacing with Ellucian Ethos. It is built by some members of the Ethos customer the 
 community. 
 
 Currently in development -and not fully tested for production use.
 
-## Aims
+ ## Aims
 
 This library aims to provide:
 
@@ -14,13 +14,14 @@ This library aims to provide:
  - Change notification poller
  - Provide mock running mode to allow for testing without calling Ethos
  
-## Usage examples
+ ## Usage examples
 
  - For a quick start usage example using the python REPL console follow the [Quickstart](./docs/QUICKSTART.md) guide.
+ - For examples of getting mutiple resources see [Resource Iterator Guide](./docs/RESOURCEITERATORS.md)
  - For examples of using the poller functionality see [Poller Guide](./docs/POLLERGUIDE.md)
  - For sample scripts see [Sample scripts directory](./samples)
 
-## Background
+ ## Background
 
 I started putting this python library after an Ethos user group meeting. There are a number of other Ellucian customers
 all writing clients and I wanted to take the opportunity of digging out exmaples I had written for myself and my team
