@@ -1,18 +1,15 @@
  # EllucianEthosPythonClient
-Python Client Library for interfacing with Ellucian Ethos. It is built by some members of the Ethos customer the 
-community. 
-
-Currently in development -and not fully tested for production use.
+Python Client Library for interfacing with Ellucian Ethos.
 
  ## Aims
 
-This library aims to provide:
+This library can:
 
- - Wrapper class to handle Ethos authorizations
- - Wrapper classes that call Ellucian API's to fetch resources
- - Common updates on resources
- - Change notification poller
- - Provide mock running mode to allow for testing without calling Ethos
+ - Handle Ethos authorizations (JWT token etc.)
+ - Create, update, and delete resources
+ - Query resources individually and in groups
+ - Fetch change notification from Ethos
+ - Provide helper methods for spercific resource types 
  
  ## Usage examples
 
