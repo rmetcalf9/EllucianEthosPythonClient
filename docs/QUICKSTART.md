@@ -52,7 +52,7 @@ person = ethosClient.getResource(
   version=None
 )
 ```
-The version paramater is optional and if you want to retrieve a specific option you can supply a string such as "12.1.0"
+The version paramater is optional and if you want to retrieve a specific version you can supply a string such as "12.1.0"
 
 If the resource is not found the getResource function will return None.
 Otherwise it will return an Resource Wrapper Object. You can print the details of the object you returned as follows:
@@ -65,7 +65,7 @@ print(person.dict)
 
 Most getResource calls will return a result class of BaseResourceWrapper however if the resource name and version is 
 recognised by the library the object returned will be a class designed for that object and version. This class may provide 
-spacial operations for that resource type. You can find the class that was returned with the following:
+special operations for that resource type. You can find the class that was returned with the following:
 
 ```
 print("Resource Type Object=", type(person).__name__)

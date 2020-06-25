@@ -55,7 +55,7 @@ pip install EllucianEthosPythonClient
 python ./generateChanges.py
 ```
 
-The program will output a + appear each time it creates a hold, and a - appear when it deletes one.
+The program will output a + each time it creates a hold, and a - when it deletes one.
 You can also use the Ethos UI to inspect the application that has been created. You should see the number of waiting
 messages for the application start to incement.
 
@@ -72,7 +72,7 @@ import queue
 import os
 ```
 
-Setup variables that contain baseurl and api key the library would use. In the example below I read these from the 
+Setup variables that contain baseurl and api key. In the example below I read these from the 
 developer machines environment but this can be changed to constant values if required:
 ```
 ethosBaseURL = os.environ["ETHOSBASEURL"]
@@ -148,7 +148,7 @@ print("resourceID:", changeNotificationRecieved.resourceID)
 print("resourceWrapper:", changeNotificationRecieved.resourceWrapper)
 ```  
 
-The value you recieve for resourceWrapper will either be None or a resource object. If it is none this is because Ethos
+The value you receive for resourceWrapper will either be None or a resource object. If it is none this is because Ethos
 will not send the resource content for delete operations. If you saw none in the command above you can keep taking
 messages from the queue until you see an example which does not contain none.
 
@@ -168,7 +168,8 @@ The resource wrapper includes refresh function can do this automatically:
 changeNotificationRecieved.resourceWrapper.refresh(loginSession=loginSession)
 ```
 
-(In the test example person-holds are being created and deleted so the refresh may fail in this case)
+(In the test example person-holds are being created and deleted so the refresh may fail because the resource is already 
+deleted)
 
 This causes API client to update the resource data with new information from Ethos.
 
@@ -193,17 +194,17 @@ to process Ethos change notifications. This shows how you can continously proces
 
 ## Pros an cons of the queue based method
 
-The queue based mode is decoupled and efficient. It dosen't require storing any high water marks locally.
+The queue based mode is decoupled and efficient. It does not require storing any high water marks locally.
 This means you can launch mutiple instances of the python application to increase the throughput of the system.
 However if your python program were to crash messages stored in it's
 queue will be lost. This may be acceptable if you have some way other way of retransmitting the messages in the event of
-failure. You may wish to take a look a the function based mode.
+failure.
 
  # Function based mode
  
  The ethos change notification process allows clients to persist the lastprocessedid into local storage. This is
  required to provide a reliable message subscription process. The disadvantage of this is that each single page of
- messages must be completly processed before the next page is processed.
+ messages must be completly processed before the next page is requested.
  
  To use the poller in this mode you must provide a function which processes each message and persists the lastprocessedid
  to a file store.
@@ -225,7 +226,7 @@ Next we need to prepare a function for the library to call that will process eac
 The requiremnts for the function are:
  - accept three parameters apiClient, messageid, changeNotification
  - process the message and commit any transactions
- - lastly write the messageid passed in as the lastprocessedid
+ - write the messageid passed in as the lastprocessedid
  - return True if the message was processed sucessfully
  - return False or raise an exception otherwise
  
@@ -241,13 +242,13 @@ def processSingleMessage(apiClient, messageid, changeNotification):
     return True
 ```
 
-This exmaple just outputs to the screen. More often it would write to a file or db and commit the transaction.
+This exmaple just outputs to the screen. In a real example it would write to a file or db and commit the transaction.
 
 The change notificaiton object is the same as the one that is retrieved from the queue in queue mode so all the same 
 operations are available. 
 
-You can only start the poller thread once so we will create a new ethosCLient instnace. (Hopefully you haven't forgotten
-to stop the previous thread by calling ethosClient.close() on the old one.)
+You can only start the poller thread once so we will create a new ethosClient instance. (Hopefully you haven't forgotten
+to stop the previous thread by calling ethosClient.close())
 
 ```
 ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
