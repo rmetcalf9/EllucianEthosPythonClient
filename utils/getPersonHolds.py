@@ -5,6 +5,8 @@ import Common
 
 ##https://resources.elluciancloud.com/bundle/person-holds/page/6.0/index.html
 
+##If we add the parent directory to the path we will use the development version of the library
+##  rather than the insalled version
 sys.path.insert(0, os.path.abspath('../'))
 import EllucianEthosPythonClient
 

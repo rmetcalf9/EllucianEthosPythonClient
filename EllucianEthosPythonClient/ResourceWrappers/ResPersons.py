@@ -25,6 +25,19 @@ class Persons(BaseResourceWrapper):
     del retVal["addresses"]
     return retVal
 
+  def getVisas(self, loginSession):
+    params = {
+      "criteria": "{\"person\": {\"id\": \"" + self.resourceID + "\"}}"
+    }
+    print(params)
+    return self.clientAPIInstance.getResourceIterator(
+      loginSession=loginSession,
+      resourceName="person-visas",
+      version=None,
+      params=params,
+      pageSize=25
+    )
+
 class PersonsV6(Persons):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)

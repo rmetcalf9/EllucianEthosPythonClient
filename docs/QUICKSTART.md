@@ -95,6 +95,7 @@ You can run this in the REPL:
 personHoldIterator = ethosClient.getResourceIterator(
   loginSession=loginSession,
   resourceName="person-holds",
+  params=None,
   version=None,
   pageSize=25
 )
@@ -107,6 +108,8 @@ for personHold in personHoldIterator:
   if cur > max:
     break
 ```
+
+For more information on using resource iterators see [resource iterators](./RESOURCEITERATORS.md)
 
 ## Create a new resource
 
