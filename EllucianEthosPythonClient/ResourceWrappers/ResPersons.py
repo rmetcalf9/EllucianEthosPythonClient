@@ -29,7 +29,6 @@ class Persons(BaseResourceWrapper):
     params = {
       "criteria": "{\"person\": {\"id\": \"" + self.resourceID + "\"}}"
     }
-    print(params)
     return self.clientAPIInstance.getResourceIterator(
       loginSession=loginSession,
       resourceName="person-visas",
