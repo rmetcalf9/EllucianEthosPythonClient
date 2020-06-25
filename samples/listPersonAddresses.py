@@ -3,6 +3,10 @@ import os
 
 # This sample uses a resource iterator to list all the visas for a particular person
 
+##If we add the parent directory to the path we will use the development version of the library
+##  rather than the insalled version
+sys.path.insert(0, os.path.abspath('../'))
+
 import EllucianEthosPythonClient
 
 ethosBaseURL = os.environ["ETHOSBASEURL"]
@@ -25,10 +29,11 @@ person = ethosClient.getResource(
 )
 print("Found:", person.dict["names"][0]["fullName"])
 
-print("Next list all the persons visas")
+print("Next list all the persons addresses")
 cur = 0
-for curVisa in person.getVisas(loginSession=loginSession):
+for curAddress in person.getAddresses(loginSession=loginSession):
   cur += 1
-  print(cur, "visa", curVisa.dict)
+  print(cur, "address", curAddress)
+  print(cur, "address", curAddress["address"].dict)
 
 print("End")

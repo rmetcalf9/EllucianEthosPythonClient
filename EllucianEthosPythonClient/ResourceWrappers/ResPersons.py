@@ -14,6 +14,8 @@ def registerKnownResourses(resoursRegistryDict):
   resoursRegistryDict["persons"]=getKnownResource
 
 class Persons(BaseResourceWrapper):
+  addressListCache = None
+
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
@@ -24,6 +26,24 @@ class Persons(BaseResourceWrapper):
     # sending them to API causes error
     del retVal["addresses"]
     return retVal
+
+  def _afterDictChanged(self):
+    self.addressListCache = None
+
+  def getAddresses(self, loginSession):
+    if self.addressListCache is None:
+      self.addressListCache = []
+      for curAddress in self.dict["addresses"]:
+        newObj = copy.deepcopy(curAddress)
+        newObj["address"] = self.clientAPIInstance.getResource(
+          loginSession=loginSession,
+          resourceName="addresses",
+          resourceID=curAddress["address"]["id"],
+          version=None
+        )
+        self.addressListCache.append(newObj)
+
+    return self.addressListCache
 
   def getVisas(self, loginSession):
     params = {

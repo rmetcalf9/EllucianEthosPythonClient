@@ -12,13 +12,12 @@ class BaseResourceWrapper():
     self.dict = dict
     self.version = version
     self.resourceName = resourceName
-
     if "id" not in dict:
       raise Exception("Invalid resource dict (missing id)")
     if not isinstance(version , str):
       raise Exception("Version passed must be a string")
-
     self.resourceID = dict["id"]
+    self._afterDictChanged()
 
   def getMajorVersion(self):
     return self.version.split(".")[0]
@@ -44,6 +43,7 @@ class BaseResourceWrapper():
       self.clientAPIInstance.raiseResponseException(result)
 
     self.dict = json.loads(result.content)
+    self._afterDictChanged()
 
   def delete(self, loginSession):
     url = "/api/" + self.resourceName + "/" + self.resourceID
@@ -70,3 +70,9 @@ class BaseResourceWrapper():
     if resourceName != self.resourceName:
       raise Exception("Internal Error wrong resourceName on refresh")
     self.dict = json.loads(resultContent)
+    self._afterDictChanged()
+
+  def _afterDictChanged(self):
+    # called after the dict changes e.g. creation and refresh
+    #  allows sub classes to remove caches
+    pass
