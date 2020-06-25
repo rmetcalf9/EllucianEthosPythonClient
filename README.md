@@ -1,7 +1,8 @@
 # EllucianEthosPythonClient
-Python Client Library for interfacing with Ellucian Ethos
+Python Client Library for interfacing with Ellucian Ethos. It is built by some members of the Ethos customer the 
+community. 
 
-In development - not ready for production use
+Currently in development -and not fully tested for production use.
 
 ## Aims
 
@@ -22,7 +23,7 @@ This library aims to provide:
 ## Background
 
 I started putting this python library after an Ethos user group meeting. There are a number of other Ellucian customers
-all writing clients and I wanted to take the oppertunity of digging out exmaples I had written for myself and my team
+all writing clients and I wanted to take the opportunity of digging out exmaples I had written for myself and my team
 and sharing them with the community. I hope that publishing this library is useful to other Ethos users and hope to 
 collaborate on improving it further. Please feel free to submit feedback, issues and pull requests.
   
