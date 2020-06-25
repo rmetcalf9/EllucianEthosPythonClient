@@ -32,6 +32,9 @@ class ResourceIterator:
     self.versionReturned = None
 
   def __iter__(self):
+    self.curList = []
+    self.curIdx = 0
+    self.curOffset = 0
     return self
 
   def __next__(self):
