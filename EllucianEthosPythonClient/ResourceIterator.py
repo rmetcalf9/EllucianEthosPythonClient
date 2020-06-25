@@ -11,8 +11,9 @@ class ResourceIterator:
   curIdx = None
   curOffset = None
   versionReturned = None
+  params = None
 
-  def __init__(self, apiClient, loginSession, resourceName, version, pageSize):
+  def __init__(self, apiClient, loginSession, resourceName, version, pageSize, params):
     self.apiClient = apiClient
     self.loginSession = loginSession
     self.resourceName = resourceName
@@ -22,6 +23,11 @@ class ResourceIterator:
     self.curList = []
     self.curIdx = 0
     self.curOffset = 0
+
+    if params is None:
+      self.params = {}
+    else:
+      self.params = params
 
     self.versionReturned = None
 
@@ -42,13 +48,11 @@ class ResourceIterator:
       if self.version is not None:
         headers["Accept"] = "application/vnd.hedtech.integration.v" + self.version + "+json"
 
-    params = {
-      "limit": str(self.pageSize),
-      "offset": str(self.curOffset)
-    }
+    self.params["limit"] = str(self.pageSize)
+    self.params["offset"] = str(self.curOffset)
     result = self.apiClient.sendGetRequest(
       url="/api/" + self.resourceName,
-      params=params,
+      params=self.params,
       loginSession=self.loginSession,
       injectHeadersFn=injectHeaderFN
     )

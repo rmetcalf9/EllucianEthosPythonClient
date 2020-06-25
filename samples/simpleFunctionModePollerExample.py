@@ -6,7 +6,7 @@ import os
 
 ##If we add the parent directory to the path we will use the development version of the library
 ##  rather than the insalled version
-sys.path.insert(0, os.path.abspath('../'))
+##sys.path.insert(0, os.path.abspath('../'))
 
 import EllucianEthosPythonClient
 import queue
@@ -21,14 +21,11 @@ lastprocessid_FileName = "./pollerguideTempFileForLastProcessedID.txt"
 
 ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=ethosBaseURL)
 loginSession = ethosClient.getLoginSessionFromAPIKey(apiKey=ethosPollerAppAPIKey)
-loginSession2 = ethosClient.getLoginSessionFromAPIKey(apiKey=os.environ["ICETHOSDEVAPIKEY"])
 
 
 def processSingleMessage(apiClient, messageid, changeNotification):
   # in a real example this part would write to file or update a db
   ##print("received ", changeNotification.operation, changeNotification.resourceName, changeNotification.resourceID)
-  if changeNotification.resourceWrapper is not None:
-    changeNotification.resourceWrapper.refresh(loginSession=loginSession2)
   with open(lastprocessid_FileName, 'w') as filetowrite:
     filetowrite.write(messageid)
   return True

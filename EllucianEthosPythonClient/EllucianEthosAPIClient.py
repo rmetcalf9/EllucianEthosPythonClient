@@ -46,8 +46,8 @@ class EllucianEthosAPIClient(APIClientBase):
       return None
     return getResourceWrapper(clientAPIInstance=self, dict=json.loads(resultContent), version=versionReturned, resourseName=resourceName)
 
-  def getResourceIterator(self, loginSession, resourceName, version=None, pageSize=25):
-    return ResourceIterator(self, loginSession, resourceName, version, pageSize)
+  def getResourceIterator(self, loginSession, resourceName, version=None, pageSize=25, params=None):
+    return ResourceIterator(self, loginSession, resourceName, version, pageSize, params=params)
 
   def getVersionIntFromHeader(self, meaidTypeHeaderValue):
     #example: application/vnd.hedtech.integration.v6+json
