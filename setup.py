@@ -12,10 +12,15 @@ sp_tests_require = [
 
 all_require = sp_install_requires + sp_tests_require
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(name='EllucianEthosPythonClient',
       version=versioneer.get_version(),
       cmdclass=versioneer.get_cmdclass(),
       description='Python package which provides Ellucian Ethos Client',
+      long_description=long_description,
+      long_description_content_type="text/markdown",
       url='https://github.com/rmetcalf9/EllucianEthosPythonClient',
       author='Robert Metcalf',
       author_email='rmetcalf9@googlemail.com',
