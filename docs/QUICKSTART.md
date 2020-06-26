@@ -29,7 +29,7 @@ persons resource.
 ethosBaseURL = "ETHOS BASE URL e.g. https://integrate.elluciancloud.ie no trailing slash"
 ethosAPIKey = "ETHOS APPLICATION API KEY"
 resourceName = "persons"
-resourceID = "A_PERSON_GuiD"
+personResourceID = "A_PERSON_GuiD"
 ```
 (Replace the values above with values from your environment)
 
