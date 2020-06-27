@@ -166,70 +166,8 @@ ethosClient.deleteResource(
 ## Call any other API
 
 This library wraps a lot of API calls to make them easier to use in Python. Not every API call is wrapped in the library
-and they may not be wrapped in the way that is requried. The following example shows calling the API directly whilst
-still using the library to handle API security: 
-
-```
-exampleURL = "/api/persons/SOMEPERSONGUID"
-exampleVersion = "6"
-
-def sampleInjectHeaderFunctionForGet(headers):
-  headers["Accept"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
-
-result = self.sendGetRequest(
-  url=exampleURL,
-  loginSession=loginSession,
-  injectHeadersFn=sampleInjectHeaderFunctionForGet
-)
-
-def sampleInjectHeaderFunctionForPost(headers):
-    headers["Accept"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
-    headers["Content-Type"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
-
-postDict = { "TODO": "PutDataHere" }
-
-result = self.sendPostRequest(
-    url=exampleURL,
-    loginSession=loginSession,
-    injectHeadersFn=sampleInjectHeaderFunctionForPost,
-    data=json.dumps(postDict)
-)
-
-def sampleInjectHeaderFunctionForPut(headers):
-  headers["Accept"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
-  headers["Content-Type"] = "application/vnd.hedtech.integration.v" + exampleVersion + "+json"
-
-putDict = { "TODO": "PutDataHere" }
-
-result = self.clientAPIInstance.sendPutRequest(
-  url=exampleURL,
-  loginSession=loginSession,
-  injectHeadersFn=sampleInjectHeaderFunctionForPut,
-  data=json.dumps(putDict)
-)
-
-
-result = ethosClient.sendDeleteRequest(
-    url=exampleURL,
-    loginSession=loginSession,
-    injectHeadersFn=None
-)
-
-```
-
-The return value of these functions is a standard python requests response object.
-
-Note: With built in API calls the library will check the response code is correct and raise Exceptions. When you call
-the API's with this method you are responsible for checking the response is correct and for converting the output to a 
-python structure, an example for doing this is:
-
-```
-if result.status_code != 200:
-    raise Exception("An API Error has occured")
-
-resultDict = json.loads(result.content)
-
-```
+and they may not be wrapped in the way that is reburied. You can still use the library to make these calls and handle
+the security. See [direct call guide](DIRECTCALL.md) for examples.
 
 ## Next Steps
 

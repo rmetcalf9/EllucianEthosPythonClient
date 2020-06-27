@@ -19,6 +19,7 @@ This library can:
  - For a quick start usage example using the python REPL console follow the [Quickstart](./docs/QUICKSTART.md) guide.
  - For examples of getting mutiple resources see [Resource Iterator Guide](./docs/RESOURCEITERATORS.md)
  - For examples of using the poller functionality see [Poller Guide](./docs/POLLERGUIDE.md)
+ - Examples of direclty calling Ethos API see [Direct Call](./docs/DIRECTCALL.md)
  - For sample scripts see [Sample scripts directory](./samples)
 
  ## Background
