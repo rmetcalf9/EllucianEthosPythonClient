@@ -10,7 +10,7 @@ sp_tests_require = [
   'python_Testing_Utilities==0.1.5',
   'requests==2.20.1',
   'pytz==2019.3',
-  'python-dateutil==2.8.1
+  'python-dateutil==2.8.1'
 ]
 
 all_require = sp_install_requires + sp_tests_require
