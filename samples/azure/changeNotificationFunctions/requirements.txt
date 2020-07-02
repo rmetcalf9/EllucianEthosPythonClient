@@ -1,5 +1,5 @@
 azure-functions
-EllucianEthosPythonClient==0.2.6
+EllucianEthosPythonClient==0.2.7
 ##Should no longer be needed as they are in setup.py
 ##requests==2.20.1
 ##pytz==2019.3

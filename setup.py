@@ -3,14 +3,13 @@ import versioneer
 
 #Dependancy lists maintained here and in tox.ini
 sp_install_requires = [
-#  'stomp.py==6.0.0'
-]
-sp_tests_require = [
-  'nose==1.3.7',
-  'python_Testing_Utilities==0.1.5',
   'requests==2.20.1',
   'pytz==2019.3',
   'python-dateutil==2.8.1'
+]
+sp_tests_require = [
+  'nose==1.3.7',
+  'python_Testing_Utilities==0.1.5'
 ]
 
 all_require = sp_install_requires + sp_tests_require

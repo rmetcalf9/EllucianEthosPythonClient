@@ -20,7 +20,16 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
 
     logging.info('Requesting Change Notifications from Ethos at %s', utc_timestamp)
 
-    outputDict = { "WouldHaveCalled": os.environ["ethosBaseURL"] }
+    changeNotificationIterator = ethosClient.getChangeNotificationIterator(
+        loginSession=loginSession,
+        pageLimit=20,
+        maxRequests=4
+    )
 
-    msg.set(json.dumps(outputDict))
+    numNotifications = 0
+    for curChangeNotification in changeNotificationIterator:
+        numNotifications += 1
+        msg.set(json.dumps(curChangeNotification.getSimpleDict()))
+
+    logging.info('Complete - Notifications Processed', numNotifications)
 
