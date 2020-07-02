@@ -1,5 +1,5 @@
 from .WorkerThread import WorkerThread
-from .ChangeNotificationMessage import ChangeNotificationMessage
+from .ChangeNotificationUtils import requestBatchOfPagesAndReturnRemainingCountLib
 import json
 
 #Ellucian documentation for this
@@ -43,30 +43,18 @@ class EthosChangeNotificationPollerThread(WorkerThread):
         fetchRunning = False
 
   def requestBatchOfPagesAndReturnRemainingCount(self):
-    params = {
-      "limit": str(self.pageLimit)
-    }
-    if self.lastProcessedID is not None:
-      params["lastProcessedID"] = self.lastProcessedID
-    result = self.clientAPIInstance.sendGetRequest(
-      url="/consume",
-      params=params,
-      loginSession=self.loginSession,
-      injectHeadersFn=None
-    )
-    if result.status_code != 200:
-      self.clientAPIInstance.raiseResponseException(result)
-
-    remainingMessages = int(result.headers["x-remaining"])
-    resultDict = json.loads(result.content)
-
-    for curResult in resultDict:
-      changeNotification = ChangeNotificationMessage(dict=curResult, clientAPIInstance=self.clientAPIInstance)
+    def processIndividualMessage(changeNotification):
       self.processMessage(changeNotification=changeNotification)
       if self.lastProcessedID is not None:
         self.lastProcessedID = changeNotification.messageID
 
-    return remainingMessages
+    return requestBatchOfPagesAndReturnRemainingCountLib(
+      pageLimit=self.pageLimit,
+      lastProcessedID=self.lastProcessedID,
+      clientAPIInstance=self.clientAPIInstance,
+      loginSession=self.loginSession,
+      processIndividualMessage=processIndividualMessage
+    )
 
   def processMessage(self, changeNotification):
     pass
