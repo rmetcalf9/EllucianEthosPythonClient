@@ -3,7 +3,7 @@ import EllucianEthosPythonClient
 import pytz
 import datetime
 
-class test_test_WorkerThread_prefCounterTimeValueISBefore(unittest.TestCase):
+class test_WorkerThread_prefCounterTimeValueISBefore(unittest.TestCase):
 
   def test_nextTimeSimple(self):
     self.assertEqual(

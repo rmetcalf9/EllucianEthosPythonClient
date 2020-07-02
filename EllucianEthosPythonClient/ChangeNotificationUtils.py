@@ -31,3 +31,60 @@ def requestBatchOfPagesAndReturnRemainingCountLib(
     processIndividualMessage(changeNotification=changeNotification)
 
   return remainingMessages
+
+class ChangeNotificationIterator:
+  clientAPIInstance = None
+  loginSession = None
+  pageLimit = None
+  maxRequests = None
+
+  requestsRemaining = None
+  curIdx = None
+  curResultList = None
+
+  def __init__(self, loginSession, pageLimit, maxRequests, clientAPIInstance):
+    self.clientAPIInstance = clientAPIInstance
+    self.loginSession = loginSession
+    self.pageLimit = pageLimit
+    self.maxRequests = maxRequests
+
+    self.requestsRemaining = self.maxRequests
+    self.curIdx = 0
+    self.curResultList = []
+
+  def __iter__(self):
+    self.requestsRemaining = self.maxRequests
+    self.curIdx = 0
+    self.curResultList = []
+    return self
+
+  def loadNewPageOfResults(self):
+    self.curIdx = 0
+    self.curResultList = []
+
+    def processIndividualMessage(changeNotification):
+      self.curResultList.append(changeNotification)
+
+    requestBatchOfPagesAndReturnRemainingCountLib(
+      pageLimit=self.pageLimit,
+      clientAPIInstance=self.clientAPIInstance,
+      loginSession=self.loginSession,
+      processIndividualMessage=processIndividualMessage,
+      lastProcessedID=None
+    )
+
+  def __next__(self):
+    if self.curIdx >= len(self.curResultList):
+      if self.requestsRemaining==0:
+        raise StopIteration
+      self.requestsRemaining -= 1
+      self.loadNewPageOfResults()
+
+    if self.curIdx >= len(self.curResultList):
+      # We tried getting a new page but there are still not results
+      # so terminate
+      raise StopIteration
+
+    retVal = self.curResultList[self.curIdx]
+    self.curIdx += 1
+    return retVal

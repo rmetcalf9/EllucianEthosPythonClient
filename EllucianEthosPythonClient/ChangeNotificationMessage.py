@@ -12,9 +12,10 @@ class ChangeNotificationMessage():
   resourceVersion = None
   resourceWrapper = None
 
-  #dict = None
+  origDict = None
 
   def __init__(self, dict, clientAPIInstance):
+    self.origDict = dict
     self.clientAPIInstance = clientAPIInstance
     self.messageID = dict["id"]
 
@@ -74,3 +75,6 @@ class ChangeNotificationMessage():
     #     'applicationName': 'Imperial Student API - BILD'
     # }
     #}
+
+  def getSimpleDict(self):
+    return self.origDict

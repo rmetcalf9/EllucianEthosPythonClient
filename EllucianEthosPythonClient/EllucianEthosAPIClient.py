@@ -3,6 +3,7 @@ from .EthosLoginSession import EthosLoginSessionBasedOnAPIKey
 from .ResourceWrappers import getResourceWrapper
 from .ResourceIterator import ResourceIterator
 from .ListBasedResourceIterator import ListBasedResourceIterator
+from .ChangeNotificationUtils import ChangeNotificationIterator
 from .EthosChangeNotificationPollerThread import EthosChangeNotificationPollerThreadQueueMode, EthosChangeNotificationPollerThreadFunctionMode
 import json
 
@@ -52,6 +53,14 @@ class EllucianEthosAPIClient(APIClientBase):
 
   def getListBasedResourceIterator(self, loginSession, resourceName, resourceIDList, version=None):
     return ListBasedResourceIterator(self, loginSession, resourceName, version, resourceIDList=resourceIDList)
+
+  def getChangeNotificationIterator(self, loginSession, pageLimit=25, maxRequests=4):
+    return ChangeNotificationIterator(
+      loginSession=loginSession,
+      pageLimit=pageLimit,
+      maxRequests=maxRequests,
+      clientAPIInstance=self
+    )
 
   def getVersionIntFromHeader(self, meaidTypeHeaderValue):
     #example: application/vnd.hedtech.integration.v6+json
