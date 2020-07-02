@@ -5,9 +5,9 @@ import os
 
 import azure.functions as func
 import EllucianEthosPythonClient
+import typing
 
-
-def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
+def main(mytimer: func.TimerRequest, msg: func.Out[typing.List[str]]) -> None:
 
     ethosClient = EllucianEthosPythonClient.EllucianEthosAPIClient(baseURL=os.environ["ethosBaseURL"])
     loginSession = ethosClient.getLoginSessionFromAPIKey(apiKey=os.environ["ethosAppAPIKey"])
@@ -26,10 +26,13 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         maxRequests=4
     )
 
+    msgsReceived = []
     numNotifications = 0
     for curChangeNotification in changeNotificationIterator:
         numNotifications += 1
-        msg.set(json.dumps(curChangeNotification.getSimpleDict()))
+        msgsReceived.append(json.dumps(curChangeNotification.getSimpleDict()))
 
-    logging.info('Complete - Notifications Processed', numNotifications)
+    msg.set(msgsReceived)
+
+    logging.info('Complete - Notifications Processed: %s', str(numNotifications))
 
