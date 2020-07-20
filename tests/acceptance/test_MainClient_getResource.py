@@ -110,3 +110,16 @@ class test_MainClient_getResource(helpers):
     self.assertEqual(type(person).__name__, "PersonsV" + str(personVersionInResponse))
     self.assertEqual(person.version, personVersionInResponse)
     self.assertEqual(person.dict["names"][0]["firstName"],"Joe Number 2")
+
+  def test_requestingUnknownResourceNameWithGUIDratherThanID_ReturnsGenericResourceWrapper(self):
+      guid = "testGUID"
+      mockResponse, mockResponseHeaders, mockResponseStatusCode = TestingHelper.getMimimumResourceMockResult(guid=guid, version="99999", useGUIDasIDKey=True)
+      resourceWrapper = self.getResourse(
+        guid=guid,
+        mockResponse=mockResponse,
+        mockResponseHeaders=mockResponseHeaders,
+      mockResponseStatusCode=mockResponseStatusCode
+      )
+      self.assertEqual(type(resourceWrapper).__name__, "BaseResourceWrapper")
+      self.assertEqual(resourceWrapper.version, "99999")
+

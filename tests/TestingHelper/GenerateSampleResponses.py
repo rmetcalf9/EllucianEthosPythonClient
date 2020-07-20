@@ -2,11 +2,16 @@
 
 def getMimimumResourceMockResult(
   guid,
-  version
+  version,
+  useGUIDasIDKey=False
 ):
   responseHeaders = { "x-hedtech-media-type": "application/vnd.hedtech.integration.v" + version + "+json"}
+  guidKey = "id"
+  if useGUIDasIDKey:
+    guidKey = "guid"
+
   response = {
-    "id": guid,
+    guidKey: guid,
   }
   return response, responseHeaders, 200
 

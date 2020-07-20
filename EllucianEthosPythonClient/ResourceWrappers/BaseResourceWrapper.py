@@ -12,12 +12,17 @@ class BaseResourceWrapper():
     self.dict = dict
     self.version = version
     self.resourceName = resourceName
-    if "id" not in dict:
-      raise Exception("Invalid resource dict (missing id)")
     if not isinstance(version , str):
       raise Exception("Version passed must be a string")
-    self.resourceID = dict["id"]
+    self.resourceID = self._getResourceIDFromDict(dict)
     self._afterDictChanged()
+
+  def _getResourceIDFromDict(self, dict):
+    if "id" in dict:
+      return dict["id"]
+    if "guid" in dict:
+      return dict["guid"]
+    raise Exception("Invalid resource dict (missing id)")
 
   def getMajorVersion(self):
     return self.version.split(".")[0]
