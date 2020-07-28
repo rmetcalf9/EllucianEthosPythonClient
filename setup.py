@@ -5,7 +5,8 @@ import versioneer
 sp_install_requires = [
   'requests==2.20.1',
   'pytz==2019.3',
-  'python-dateutil==2.8.1'
+  'python-dateutil==2.8.1',
+  'PythonAPIClientBase==0.0.5'
 ]
 sp_tests_require = [
   'nose==1.3.7',

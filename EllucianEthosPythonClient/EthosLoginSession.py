@@ -1,4 +1,4 @@
-from .APIClients import LoginSession
+from PythonAPIClientBase import LoginSession
 import requests
 
 class EthosLoginSessionBasedOnAPIKey(LoginSession):

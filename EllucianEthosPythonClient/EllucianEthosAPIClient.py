@@ -1,4 +1,4 @@
-from .APIClients import APIClientBase
+import PythonAPIClientBase
 from .EthosLoginSession import EthosLoginSessionBasedOnAPIKey
 from .ResourceWrappers import getResourceWrapper
 from .ResourceIterator import ResourceIterator
@@ -10,7 +10,7 @@ import json
 class CanNotStartChangeNotificationPollerTwiceException(Exception):
   pass
 
-class EllucianEthosAPIClient(APIClientBase):
+class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
   refreshAuthTokenIfRequired = None
   changeNotificationPollerThread = None
 
