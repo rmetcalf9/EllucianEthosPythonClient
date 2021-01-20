@@ -1,22 +1,6 @@
 import json
 from .ResourceWrappers import getResourceWrapper
 
-class MissingHeaderException(Exception):
-  result = None
-  msg = None
-  def __init__(self, msg, result):
-    self.result = result
-    self.msg = msg
-  def getDescriptionString(self):
-    ret = ""
-    ret += "Failed API request - " + self.msg + "\n"
-    ret += "Request: " + str(self.result.request.method) + ":" + str(self.result.request.url) + "\n"
-    ret += "Response: " + str(self.result.status_code) + ":" + self.result.content.decode() + "\n"
-    ret += "Response Headers: " + str(self.result.headers) + "\n"
-    return ret
-  def __str__(self):
-    return self.getDescriptionString()
-
 class ResourceIterator:
   apiClient = None
   loginSession = None
@@ -79,9 +63,7 @@ class ResourceIterator:
       self.apiClient.raiseResponseException(result)
 
     if self.versionReturned is None:
-      if "x-hedtech-media-type" not in result.headers:
-        raise MissingHeaderException("Response is missing header x-hedtech-media-type", result)
-      self.versionReturned = self.apiClient.getVersionIntFromHeader(result.headers["x-hedtech-media-type"])
+      self.versionReturned = self.versionReturned = self.apiClient.getVersionFromResult(result)
 
     self.curList = json.loads(result.content)
     self.curIdx = 0

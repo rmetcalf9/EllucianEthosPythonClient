@@ -32,7 +32,7 @@ class ChangeNotificationMessage():
     self.resourceID = dict["resource"]["id"]
     if "version" in dict["resource"]:
       #version not sent for deleted operation
-      self.resourceVersion = clientAPIInstance.getVersionIntFromHeader(dict["resource"]["version"])
+      self.resourceVersion = clientAPIInstance._getVersionIntFromHeader(dict["resource"]["version"])
 
     # for operation=deleted, the contentType is sent as empty
     # for operation=created, the content type is sent as resource-representation

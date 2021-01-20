@@ -10,6 +10,24 @@ import json
 class CanNotStartChangeNotificationPollerTwiceException(Exception):
   pass
 
+class MissingHeaderException(Exception):
+  result = None
+  msg = None
+  def __init__(self, msg, result):
+    self.result = result
+    self.msg = msg
+  def getDescriptionString(self):
+    ret = ""
+    ret += "Failed API request - " + self.msg + "\n"
+    ret += "Request: " + str(self.result.request.method) + ":" + str(self.result.request.url) + "\n"
+    ret += "Response: " + str(self.result.status_code) + ":" + self.result.content.decode() + "\n"
+    ret += "Response Headers: " + str(self.result.headers) + "\n"
+    return ret
+  def __str__(self):
+    return self.getDescriptionString()
+
+
+
 class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
   refreshAuthTokenIfRequired = None
   changeNotificationPollerThread = None
@@ -38,7 +56,7 @@ class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
     if result.status_code != 200:
       self.raiseResponseException(result)
 
-    versionReturned = self.getVersionIntFromHeader(result.headers["x-hedtech-media-type"])
+    versionReturned = self.getVersionFromResult(result)
     return (result.content, versionReturned, resourceName)
 
   #Doc list https://xedocs.ellucian.com/xe-banner-api/ethos_apis/foundation/persons/person_get_guid_v6.html
@@ -62,7 +80,18 @@ class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
       clientAPIInstance=self
     )
 
-  def getVersionIntFromHeader(self, meaidTypeHeaderValue):
+  def getVersionFromResult(self, result):
+    versionHeader = None
+    if "x-hedtech-media-type" in result.headers:
+      versionHeader = result.headers["x-hedtech-media-type"]
+    elif "x-media-type" in result.headers:
+      versionHeader = result.headers["x-media-type"]
+
+    if versionHeader is None:
+      raise MissingHeaderException("Response is missing header x-hedtech-media-type (or x-media-type)", result)
+    return self._getVersionIntFromHeader(versionHeader)
+
+  def _getVersionIntFromHeader(self, meaidTypeHeaderValue):
     #example: application/vnd.hedtech.integration.v6+json
     requiredStart = "application/vnd.hedtech.integration.v"
     requiredEnd = "+json"
@@ -96,7 +125,7 @@ class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
     if result.status_code != 201:
       self.raiseResponseException(result)
 
-    versionReturned = self.getVersionIntFromHeader(result.headers["x-hedtech-media-type"])
+    versionReturned = self.getVersionFromResult(result)
 
     return getResourceWrapper(clientAPIInstance=self, dict=json.loads(result.content), version=versionReturned, resourseName=resourceName)
 
