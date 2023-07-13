@@ -24,7 +24,8 @@ class Persons(BaseResourceWrapper):
 
     #Updating addresses not yet supported
     # sending them to API causes error
-    del retVal["addresses"]
+    if "addresses" in retVal:
+      del retVal["addresses"]
     return retVal
 
   def _afterDictChanged(self):
