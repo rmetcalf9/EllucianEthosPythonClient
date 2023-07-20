@@ -10,7 +10,7 @@ sp_install_requires = [
 ]
 sp_tests_require = [
   'nose==1.3.7',
-  'python_Testing_Utilities==0.1.5'
+  'python_Testing_Utilities==0.1.10'
 ]
 
 all_require = sp_install_requires + sp_tests_require
