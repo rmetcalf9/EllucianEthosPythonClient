@@ -9,7 +9,6 @@ import queue
 class helpers(TestHelperSuperClass.testClassWithHelpers):
   pass
 
-@TestHelperSuperClass.wipd
 class test_MainClient_resourceIterator(helpers):
   def test_singlePage(self):
     personGUID="personGUID"

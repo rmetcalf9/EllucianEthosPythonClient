@@ -3,10 +3,6 @@ import unittest
 import base64
 import json
 
-from nose.plugins.attrib import attr
-def wipd(f):
-    return attr('wip')(f)
-
 ethosBaseURL="MOCK"
 
 class testClassWithHelpers(unittest.TestCase):

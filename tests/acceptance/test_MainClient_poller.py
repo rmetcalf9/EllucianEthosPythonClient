@@ -9,7 +9,6 @@ import queue
 class helpers(TestHelperSuperClass.testClassWithHelpers):
   pass
 
-@TestHelperSuperClass.wipd
 class test_MainClient_poller(helpers):
   def test_notAbleToStartPollerTwiceWithoutClose(self):
     pollerQueue = queue.Queue()

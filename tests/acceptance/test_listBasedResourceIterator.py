@@ -9,7 +9,6 @@ import queue
 class helpers(TestHelperSuperClass.testClassWithHelpers):
   pass
 
-@TestHelperSuperClass.wipd
 class test_MainClient_listBasedResourceIterator(helpers):
   def test_emptyList(self):
     resourceIDList = []

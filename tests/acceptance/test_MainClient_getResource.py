@@ -8,7 +8,6 @@ import TestingHelper
 class helpers(TestHelperSuperClass.testClassWithHelpers):
   pass
 
-@TestHelperSuperClass.wipd
 class test_MainClient_getResource(helpers):
   def test_getPersonNoVersionSpecfied(self):
     personVersionInResponse = "12"

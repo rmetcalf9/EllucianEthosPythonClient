@@ -36,7 +36,6 @@ class helpers(TestHelperSuperClass.testClassWithHelpers):
     self.assertFalse(resp.resourceID is None)
     return resp
 
-@TestHelperSuperClass.wipd
 class test_MainClient_createResource(helpers):
   def test_createPersonHold(self):
     createdPersonHoldGUID = "testPersonHoldGUID"

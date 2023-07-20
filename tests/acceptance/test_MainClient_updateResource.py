@@ -25,7 +25,6 @@ class helpers(TestHelperSuperClass.testClassWithHelpers):
 
     resourceWrapperObject.save(loginSession=None)
 
-@TestHelperSuperClass.wipd
 class test_MainClient_updateResource(helpers):
   def test_updatePersons(self):
     personVersionInResponse = "12"
