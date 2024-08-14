@@ -32,8 +32,8 @@ class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
   refreshAuthTokenIfRequired = None
   changeNotificationPollerThread = None
 
-  def __init__(self, baseURL, mock=None):
-    super().__init__(baseURL=baseURL, mock=mock, forceOneRequestAtATime=True)
+  def __init__(self, baseURL, mock=None, verboseLogging=PythonAPIClientBase.VerboseLoggingNullLogClass()):
+    super().__init__(baseURL=baseURL, mock=mock, forceOneRequestAtATime=True, verboseLogging=verboseLogging)
     self.changeNotificationPollerThread = None
 
   def getLoginSessionFromAPIKey(self, apiKey):
