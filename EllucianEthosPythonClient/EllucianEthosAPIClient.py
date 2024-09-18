@@ -195,3 +195,11 @@ class EllucianEthosAPIClient(PythonAPIClientBase.APIClientBase):
     if self.changeNotificationPollerThread is not None:
       self.changeNotificationPollerThread.close()
       self.changeNotificationPollerThread = None
+
+  def status(self):
+    print("Ethos Client status")
+    if self.changeNotificationPollerThread is None:
+      print("Change notification poller thread NOT RUNNING")
+    else:
+      print("Change notification poller thread Running")
+
