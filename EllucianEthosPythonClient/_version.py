@@ -478,7 +478,7 @@ def render_pep440_pre(pieces: Dict[str, Any]) -> str:
             # no commits, use the tag as the version
             rendered = pieces["closest-tag"]
     else:
-        # exception #1
+        # exception #1SafeConfigParser
         rendered = "0.post0.dev%d" % pieces["distance"]
     return rendered
 
