@@ -1,6 +1,8 @@
 import json
 import copy
 
+NO_ID_IN_DICT = "NO_ID_IN_DICT"
+
 class BaseResourceWrapper():
   clientAPIInstance = None
   dict = None
@@ -22,7 +24,8 @@ class BaseResourceWrapper():
       return dict["id"]
     if "guid" in dict:
       return dict["guid"]
-    raise Exception("Invalid resource dict (missing id)")
+    return NO_ID_IN_DICT
+    #raise Exception("Invalid resource dict (missing id)")
 
   def getMajorVersion(self):
     return self.version.split(".")[0]
@@ -31,6 +34,8 @@ class BaseResourceWrapper():
     return copy.deepcopy(self.dict)
 
   def save(self, loginSession):
+    if self.resourceID == NO_ID_IN_DICT:
+      raise Exception("Can not save - no id in dict")
     def injectHeaderFN(headers):
       headers["Accept"] = "application/vnd.hedtech.integration.v" + self.getMajorVersion() + "+json"
       headers["Content-Type"] = "application/vnd.hedtech.integration.v" + self.getMajorVersion() + "+json"
@@ -51,6 +56,9 @@ class BaseResourceWrapper():
     self._afterDictChanged()
 
   def delete(self, loginSession):
+    if self.resourceID == NO_ID_IN_DICT:
+      raise Exception("Can not delete - no id in dict")
+
     url = "/api/" + self.resourceName + "/" + self.resourceID
 
     result = self.clientAPIInstance.sendDeleteRequest(
@@ -62,6 +70,9 @@ class BaseResourceWrapper():
       self.clientAPIInstance.raiseResponseException(result)
 
   def refresh(self, loginSession):
+    if self.resourceID == NO_ID_IN_DICT:
+      raise Exception("Can not refresh - no id in dict")
+
     (resultContent, versionReturned, resourceName) = self.clientAPIInstance._getResourceRAW(
       loginSession=loginSession,
       resourceName=self.resourceName,
